@@ -1,15 +1,15 @@
 import React, { useState, useRef, useCallback } from 'react';
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
-import trashAnimation from "@/animations/trash.json";
+import arrowAnimation from "@/animations/arrow.json";
 
-interface LottieTrashProps {
+interface LottieArrowProps {
   onClick: () => void;
   style: React.CSSProperties;
   size: number | undefined;
   speed: number | undefined;
 }
 
-const LottieTrash: React.FC<LottieTrashProps> = ({ onClick, style, size, speed }) => {
+const LottieArrow: React.FC<LottieArrowProps> = ({ onClick, style, size, speed }) => {
   const [isHovered, setIsHovered] = useState(false);
   const lottieRef = useRef<LottieRefCurrentProps>(null);
 
@@ -23,27 +23,35 @@ const LottieTrash: React.FC<LottieTrashProps> = ({ onClick, style, size, speed }
       }
     }
   }, [isHovered]);
-  
+
   React.useEffect(() => {
     handleAnimation();
   }, [handleAnimation]);
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   return (
     <div 
       className="h-10 w-10 flex items-center justify-center"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onClick={onClick}
     >
       <Lottie 
         lottieRef={lottieRef}
-        animationData={trashAnimation} 
+        animationData={arrowAnimation} 
         loop={false}
         autoplay={false}
-        style={{ ...style, filter: 'invert(1)', width: size, height: size }} // This will make it white
+        style={{ ...style, filter: 'invert(1)', width: size, height: size }}
       />
     </div>
   );
 };
 
-export default LottieTrash;
+export default LottieArrow;

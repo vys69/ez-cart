@@ -14,6 +14,8 @@ import { ToastAction } from "@/components/ui/toast"
 import Lottie from "lottie-react";
 import trashAnimation from "@/animations/trash.json"; // Adjust the path as needed
 import LottieTrash from "@/components/LottieTrash";
+import LottieArrow from "@/components/LottieArrow";
+
 interface GroceryItem {
   id: number
   name: string
@@ -239,7 +241,12 @@ export default function Cart() {
             onClick={handleBackToStep}
             className="h-10 w-10 bg-transparent text-white hover:text-gray-400 hover:bg-transparent"
           >
-            <ArrowLeft className="h-6 w-6" />
+            <LottieArrow
+              style={{ color: 'white', fill: 'white', transform: 'scaleX(-1)' }}
+              size={40}
+              speed={2.5}
+              onClick={handleBackToStep}
+            />
           </Button>
           <CardTitle className="text-2xl font-bold text-center flex-grow text-white">Cart</CardTitle>
           <Button
@@ -251,6 +258,7 @@ export default function Cart() {
             <LottieTrash
               style={{ color: 'white', fill: 'white' }}
               size={40}
+              speed={2.5}
               onClick={handleClearList}
             />
           </Button>
