@@ -1,26 +1,30 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Plus, Minus, Trash2, ArrowLeft } from "lucide-react"
+import { Plus, Minus, Trash2, ArrowLeft, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { states } from "@/helpers/states"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ConfirmationModal } from "@/components/ConfirmationModal"
 import { LinearBlur } from "progressive-blur"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
-import Lottie from "lottie-react";
-import trashAnimation from "@/animations/trash.json"; // Adjust the path as needed
-import LottieTrash from "@/components/LottieTrash";
-import LottieArrow from "@/components/LottieArrow";
+import LottieTrash from "@/components/LottieTrash"
+import LottieArrow from "@/components/LottieArrow"
 
 interface GroceryItem {
   id: number
   name: string
   price: number
   quantity: number
+}
+
+interface SharedData {
+  items: GroceryItem[];
+  currency: string | null;
+  state: string | null;
 }
 
 const formatNumber = (num: number | null | undefined): string => {
@@ -30,6 +34,7 @@ const formatNumber = (num: number | null | undefined): string => {
 
 export default function Cart() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { toast } = useToast()
   const [items, setItems] = useState<GroceryItem[]>([])
   const [newItemName, setNewItemName] = useState("")
@@ -43,34 +48,135 @@ export default function Cart() {
   const itemNameInputRef = useRef<HTMLInputElement>(null)
   const itemPriceInputRef = useRef<HTMLInputElement>(null)
 
+  const encodeData = (data: SharedData): string => {
+    return btoa(JSON.stringify(data));
+  };
+
+  const decodeData = (encodedData: string): SharedData => {
+    return JSON.parse(atob(encodedData));
+  };
+
+  const handleShare = async () => {
+    const sharedData: SharedData = {
+      items,
+      currency: selectedCountry,
+      state: selectedCountry === 'USD' ? selectedState : null
+    };
+    const encodedData = encodeData(sharedData);
+    const shareableUrl = `${window.location.origin}${window.location.pathname}?data=${encodedData}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Shopping Cart',
+          text: 'Check out my shopping cart!',
+          url: shareableUrl,
+        });
+        toast({
+          title: "Shared Successfully!",
+          description: "Your cart has been shared.",
+          variant: "default",
+          style: {
+            backgroundColor: "#191919",
+            color: "white",
+            border: "none",
+          }
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+        fallbackShare(shareableUrl);
+      }
+    } else {
+      fallbackShare(shareableUrl);
+    }
+
+    // Optionally, update the URL without reloading the page
+    router.push(`${window.location.pathname}?data=${encodedData}`, { scroll: false });
+  };
+
+  const fallbackShare = (shareableUrl: string) => {
+    navigator.clipboard.writeText(shareableUrl).then(() => {
+      toast({
+        title: "Link Copied!",
+        description: "The shareable link has been copied to your clipboard.",
+        variant: "default",
+        style: {
+          backgroundColor: "#191919",
+          color: "white",
+          border: "none",
+        }
+      });
+    }, (err) => {
+      console.error('Could not copy text: ', err);
+      toast({
+        title: "Error",
+        description: "Failed to copy link to clipboard.",
+        variant: "destructive",
+      });
+    });
+  };
+
   useEffect(() => {
-    const storedCurrency = localStorage.getItem("currency")
-    const storedState = localStorage.getItem("state")
+    const sharedData = searchParams.get('data');
+    if (sharedData) {
+      try {
+        const parsedData: SharedData = decodeData(sharedData);
+        
+        if (parsedData.items && Array.isArray(parsedData.items)) {
+          setItems(parsedData.items);
+          saveItemsToLocalStorage(parsedData.items);
+        } else {
+          setItems([]);
+        }
+
+        if (parsedData.currency) {
+          setSelectedCountry(parsedData.currency);
+          localStorage.setItem("currency", parsedData.currency);
+        }
+
+        if (parsedData.currency === 'USD' && parsedData.state) {
+          setSelectedState(parsedData.state);
+          localStorage.setItem("state", parsedData.state);
+        }
+      } catch (error) {
+        console.error('Failed to parse shared data:', error);
+        loadFromLocalStorage();
+      }
+    } else {
+      loadFromLocalStorage();
+    }
+  }, [searchParams]);
+
+  const loadFromLocalStorage = () => {
+    const storedCurrency = localStorage.getItem("currency");
+    const storedState = localStorage.getItem("state");
 
     if (storedCurrency) {
-      setSelectedCountry(storedCurrency)
+      setSelectedCountry(storedCurrency);
       if (storedCurrency === 'USD' && storedState) {
-        setSelectedState(storedState)
+        setSelectedState(storedState);
       }
     }
 
-    // Load items from localStorage
-    const storedItems = localStorage.getItem("groceryItems")
+    const storedItems = localStorage.getItem("groceryItems");
     if (storedItems) {
-      setItems(JSON.parse(storedItems))
+      const parsedItems = JSON.parse(storedItems);
+      setItems(Array.isArray(parsedItems) ? parsedItems : []);
+    } else {
+      setItems([]);
     }
-  }, [])
+  };
 
   const saveItemsToLocalStorage = (newItems: GroceryItem[]) => {
-    localStorage.setItem("groceryItems", JSON.stringify(newItems))
-  }
+    localStorage.setItem("groceryItems", JSON.stringify(newItems));
+  };
 
   const handleItemNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (value.length <= 265) {
+    if (value.length <= 100) {
       setNewItemName(value);
     }
-  }
+  };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -79,21 +185,21 @@ export default function Cart() {
     if (/^\d{0,10}(\.\d*)?$/.test(value)) {
       setNewItemPrice(value);
     }
-  }
+  };
 
   const handleItemNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newItemName.trim() !== '') {
       e.preventDefault() // Prevent form submission
       itemPriceInputRef.current?.focus()
     }
-  }
+  };
 
   const handlePriceKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newItemPrice.trim() !== '') {
       e.preventDefault() // Prevent form submission
       addItem()
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,7 +231,7 @@ export default function Cart() {
 
     console.log("Validation passed, calling addItem"); // Debug log
     addItem();
-  }
+  };
 
   const addItem = () => {
     console.log("addItem called"); // Debug log
@@ -184,7 +290,7 @@ export default function Cart() {
     saveItemsToLocalStorage(updatedItems);
   }
 
-  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  const subtotal = items ? items.reduce((sum, item) => sum + (item.price * item.quantity), 0) : 0
   const taxRate = selectedCountry === 'USD' && selectedState && selectedState !== " " ?
     states.find(s => s.name === selectedState)?.taxRate || 0 : 0
   const taxAmount = (subtotal * taxRate) / 100
@@ -235,19 +341,29 @@ export default function Cart() {
             />
           </Button>
           <CardTitle className="text-2xl font-bold text-center flex-grow text-white">Cart</CardTitle>
-          <Button
-            variant="default"
-            size="icon"
-            onClick={handleClearList}
-            className="h-10 w-10 bg-transparent text-white hover:text-gray-400 hover:bg-transparent"
-          >
-            <LottieTrash
-              style={{ color: 'white', fill: 'white' }}
-              size={40}
-              speed={2.5}
+          <div className="flex">
+            <Button
+              variant="default"
+              size="icon"
+              onClick={handleShare}
+              className="h-10 w-10 bg-transparent text-white hover:text-gray-400 hover:bg-transparent mr-2"
+            >
+              <Share2 className="h-6 w-6" />
+            </Button>
+            <Button
+              variant="default"
+              size="icon"
               onClick={handleClearList}
-            />
-          </Button>
+              className="h-10 w-10 bg-transparent text-white hover:text-gray-400 hover:bg-transparent"
+            >
+              <LottieTrash
+                style={{ color: 'white', fill: 'white' }}
+                size={40}
+                speed={2.5}
+                onClick={handleClearList}
+              />
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden flex flex-col relative px-4">
           <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-10">
@@ -353,7 +469,7 @@ export default function Cart() {
               onKeyDown={handleItemNameKeyDown}
               className="w-full text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
               ref={itemNameInputRef}
-              maxLength={265}
+              maxLength={100}
             />
             <div className="flex space-x-2 w-full">
               <Input
