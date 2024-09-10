@@ -36,8 +36,8 @@ export default function Cart() {
   const [newItemPrice, setNewItemPrice] = useState("")
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
   const [selectedState, setSelectedState] = useState<string | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalAction, setModalAction] = useState<'back' | 'clear'>('back')
+  const [backModalOpen, setBackModalOpen] = useState(false)
+  const [clearModalOpen, setClearModalOpen] = useState(false)
   const [originalItems] = useState<GroceryItem[]>([])
   const listRef = useRef<HTMLUListElement>(null)
   const itemNameInputRef = useRef<HTMLInputElement>(null)
@@ -197,38 +197,24 @@ export default function Cart() {
   }, [items])
 
   const handleBackToStep = () => {
-    // Check if there are any changes
-    if (JSON.stringify(items) !== JSON.stringify(originalItems)) {
-      setModalAction('back')
-      setIsModalOpen(true)
-    } else {
-      router.push('/step/2')
-    }
+    setBackModalOpen(true)
   }
 
   const handleClearList = () => {
     if (items.length > 0) {
-      setModalAction('clear')
-      setIsModalOpen(true)
+      setClearModalOpen(true)
     }
   }
 
-  const handleConfirmAction = () => {
-    setIsModalOpen(false)
-    if (modalAction === 'back') {
-      // Save changes and go back
-      saveItemsToLocalStorage(items)
-      router.push('/step/2')
-    } else {
-      // Clear the list
-      setItems([])
-      saveItemsToLocalStorage([])
-    }
+  const handleConfirmBack = () => {
+    saveItemsToLocalStorage(items)
+    router.push('/step/2')
   }
 
-  const handleCancelAction = () => {
-    setIsModalOpen(false)
-    // Do not navigate here
+  const handleConfirmClear = () => {
+    setItems([])
+    saveItemsToLocalStorage([])
+    setClearModalOpen(false)
   }
 
   return (
@@ -388,11 +374,28 @@ export default function Cart() {
         </div>
       </div>
       <ConfirmationModal
-        isOpen={isModalOpen}
-        onClose={handleCancelAction}
-        onConfirm={handleConfirmAction}
-        onCancel={handleCancelAction}
-        action={modalAction}
+        isOpen={backModalOpen}
+        onClose={() => setBackModalOpen(false)}
+        config={{
+          id: 'back',
+          title: 'Go Back',
+          message: 'Are you sure you want to go back? Your changes will be saved.',
+          cancelText: 'Cancel',
+          confirmText: 'Confirm',
+          onConfirm: handleConfirmBack
+        }}
+      />
+      <ConfirmationModal
+        isOpen={clearModalOpen}
+        onClose={() => setClearModalOpen(false)}
+        config={{
+          id: 'clear',
+          title: 'Clear List',
+          message: 'Are you sure you want to clear the entire list?',
+          cancelText: 'Cancel',
+          confirmText: 'Clear',
+          onConfirm: handleConfirmClear
+        }}
       />
     </div>
   )
