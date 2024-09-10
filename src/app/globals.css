@@ -96,3 +96,53 @@ body {
   overflow: hidden;
   text-overflow: clip;
 }
+
+
+/**
+ * ----------------------------------------
+ * animation slide-bottom
+ * ----------------------------------------
+ */
+ @-webkit-keyframes slide-bottom {
+  0% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    -webkit-transform: translateY(100px);
+            transform: translateY(100px);
+  }
+}
+@keyframes slide-bottom {
+  0% {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
+  }
+  100% {
+    -webkit-transform: translateY(100px);
+            transform: translateY(100px);
+  }
+}
+
+.slide-bottom {
+	-webkit-animation: slide-bottom 0.3s ease-in-out both;
+	        animation: slide-bottom 0.3s ease-in-out both;
+}
+
+/* Replace the @for loop with this */
+.staggered-animation {
+  animation-delay: calc(var(--animation-order, 0) * 0.1s);
+}
+
+.fade-in {
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

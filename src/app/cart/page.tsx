@@ -252,10 +252,15 @@ export default function Cart() {
         <CardContent className="flex-grow overflow-hidden flex flex-col relative px-4">
           <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-32">
             {items.map(item => (
-              <li key={item.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-lg shadow">
-                <span className="text-lg break-words mr-2 mb-2 sm:mb-0 w-full sm:w-auto">{item.name}</span>
+              <li 
+                key={item.id} 
+                className={`flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-lg shadow fade-in ${
+                  items.length > 1 ? 'staggered-animation' : ''
+                }`}
+              >
+                <span className="text-xl break-words mr-2 mb-2 sm:mb-0 w-full sm:w-auto">{item.name}</span>
                 <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
-                  <span className="text-lg font-regular whitespace-nowrap">
+                  <span className="text-md font-regular whitespace-nowrap">
                     {formatNumber(item.price)} {selectedCountry !== " " ? selectedCountry : ''}
                   </span>
                   <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10 flex-shrink-0">
