@@ -1,12 +1,13 @@
 "use client"
 
+import { Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect } from "react"
 import { Plus, Minus, Trash2, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { states } from "@/helpers/states"
-import { useRouter, useSearchParams } from "next/navigation"
 import { ConfirmationModal } from "@/components/ConfirmationModal"
 import { LinearBlur } from "progressive-blur"
 import { useToast } from "@/hooks/use-toast"
@@ -32,7 +33,7 @@ const formatNumber = (num: number | null | undefined): string => {
   return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-export default function Cart() {
+function CartContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -514,4 +515,12 @@ export default function Cart() {
       />
     </div>
   )
+}
+
+export default function Cart() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CartContent />
+    </Suspense>
+  );
 }
