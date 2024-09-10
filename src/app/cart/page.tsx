@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Plus, Minus, Trash2, ArrowLeft, Share2 } from "lucide-react"
+import { Plus, Minus, Trash2, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -43,7 +43,6 @@ export default function Cart() {
   const [selectedState, setSelectedState] = useState<string | null>(null)
   const [backModalOpen, setBackModalOpen] = useState(false)
   const [clearModalOpen, setClearModalOpen] = useState(false)
-  const [originalItems] = useState<GroceryItem[]>([])
   const listRef = useRef<HTMLUListElement>(null)
   const itemNameInputRef = useRef<HTMLInputElement>(null)
   const itemPriceInputRef = useRef<HTMLInputElement>(null)

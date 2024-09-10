@@ -15,14 +15,14 @@ const LottieArrow: React.FC<LottieArrowProps> = ({ onClick, style, size, speed }
 
   const handleAnimation = useCallback(() => {
     if (lottieRef.current) {
-      lottieRef.current.setSpeed(speed || 1); // Set animation speed to 2x
+      lottieRef.current.setSpeed(speed || 1);
       if (isHovered) {
-        lottieRef.current.playSegments([0, 30], true); // Play only half the frames forward
+        lottieRef.current.playSegments([0, 30], true);
       } else {
-        lottieRef.current.playSegments([30, 0], true); // Play half the frames backward
+        lottieRef.current.playSegments([30, 0], true);
       }
     }
-  }, [isHovered]);
+  }, [isHovered, speed]);  // Add speed to the dependency array
 
   React.useEffect(() => {
     handleAnimation();

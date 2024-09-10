@@ -22,7 +22,7 @@ const LottieTrash: React.FC<LottieTrashProps> = ({ onClick, style, size, speed }
         lottieRef.current.playSegments([30, 0], true); // Play half the frames backward
       }
     }
-  }, [isHovered]);
+  }, [isHovered, speed]);
   
   React.useEffect(() => {
     handleAnimation();
