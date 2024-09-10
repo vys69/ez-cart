@@ -7,6 +7,11 @@
 
 EZCart is a user-friendly, real-time shopping calculator designed to help users keep track of items and costs while shopping. This application provides live calculations as you add items and their prices, and includes location-based sales tax information for a comprehensive view of your total expenditure.
 
+## Gallery
+![image](https://github.com/user-attachments/assets/8dc5a842-f984-4ad1-a121-2c67e11c8bb7)
+![image](https://github.com/user-attachments/assets/0d274214-ab8c-46ca-a499-42c1700a8b26)
+
+
 ## Key Features
 
 - Real-time item and price tracking
