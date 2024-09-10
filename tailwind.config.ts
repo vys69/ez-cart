@@ -10,6 +10,10 @@ const config: Config = {
   theme: {
   	extend: {
   		colors: {
+			'custom-black': '#000000',
+			'custom-dark-gray': '#101010',
+			'custom-light-gray': '#151515',
+			'custom-lighter-gray': '#212121',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -58,6 +62,22 @@ const config: Config = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+	require("tailwindcss-animate"),
+	function({ addUtilities }: { addUtilities: any }) {
+		const newUtilities = {
+		  '.bg-gradient-custom': {
+			background: 'linear-gradient(45deg, #000000, #101010)',
+		  },
+		  '.shadow-custom-red': {
+			boxShadow: '0 0 140px 64px #151515',
+		  },
+		  '.shadow-custom-white': {
+			boxShadow: '0 0 140px 64px #212121',
+		  },
+		}
+		addUtilities(newUtilities, ['responsive', 'hover'])
+	  }
+  ],
 };
 export default config;

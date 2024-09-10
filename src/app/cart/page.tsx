@@ -254,16 +254,25 @@ export default function Cart() {
             {items.map(item => (
               <li 
                 key={item.id} 
-                className={`flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#191919] border-none hover:bg-[#383838] transition-all duration-300 ease-in-out p-4 rounded-lg shadow fade-in ${
-                  items.length > 1 ? 'staggered-animation' : ''
-                }`}
+                className={`
+                  relative overflow-hidden
+                  flex flex-col sm:flex-row justify-between items-start sm:items-center
+                  bg-gradient-custom
+                  p-4 rounded-lg shadow fade-in
+                  transition-all duration-300 ease-in-out
+                  hover:bg-[#383838]
+                  ${items.length > 1 ? 'staggered-animation' : ''}
+                `}
               >
-                <span className="text-xl break-words mr-2 mb-2 sm:mb-0 w-full sm:w-auto text-white">{item.name}</span>
-                <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
+                <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-[#121212] opacity-80 shadow-custom-red"></div>
+                <div className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full bg-[#1a1a1a] shadow-custom-white"></div>
+                
+                <span className="text-xl break-words mr-2 mb-2 sm:mb-0 w-full sm:w-auto text-white relative">{item.name}</span>
+                <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end relative">
                   <span className="text-md font-regular whitespace-nowrap text-white">
                     {formatNumber(item.price)} {selectedCountry !== " " ? selectedCountry : ''}
                   </span>
-                  <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10 flex-shrink-0 bg-[#191919]">
+                  <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10 flex-shrink-0 bg-[#191919] z-0">
                     <Trash2 className="h-5 w-5" />
                   </Button>
                 </div>
