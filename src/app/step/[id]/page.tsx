@@ -8,6 +8,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, ChevronRight } from "lucide-react"
 
+export function generateStaticParams() {
+  return [
+    { id: '1' },
+    { id: '2' },
+  ]
+}
+
 export default function StepHandler({ params }: { params: { id: string } }) {
   const router = useRouter()
   const stepId = parseInt(params.id)
