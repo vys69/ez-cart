@@ -2,7 +2,7 @@
 const nextConfig = {
     output: 'export',
     trailingSlash: true,
-    distDir: 'dist',
+    distDir: 'dist',  // This is the important line
     images: {
         unoptimized: true,
     },
