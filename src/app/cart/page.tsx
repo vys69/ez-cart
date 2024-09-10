@@ -11,7 +11,9 @@ import { ConfirmationModal } from "@/components/ConfirmationModal"
 import { LinearBlur } from "progressive-blur"
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
-
+import Lottie from "lottie-react";
+import trashAnimation from "@/animations/trash.json"; // Adjust the path as needed
+import LottieTrash from "@/components/LottieTrash";
 interface GroceryItem {
   id: number
   name: string
@@ -246,7 +248,11 @@ export default function Cart() {
             onClick={handleClearList}
             className="h-10 w-10 bg-transparent text-white hover:text-gray-400 hover:bg-transparent"
           >
-            <Trash2 className="h-6 w-6" />
+            <LottieTrash
+              style={{ color: 'white', fill: 'white' }}
+              size={40}
+              onClick={handleClearList}
+            />
           </Button>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden flex flex-col relative px-4">
