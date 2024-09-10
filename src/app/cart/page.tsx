@@ -228,23 +228,23 @@ export default function Cart() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Card className="flex-grow flex flex-col rounded-none overflow-auto">
+    <div className="min-h-screen bg-[#000000] flex flex-col">
+      <Card className="flex-grow flex flex-col rounded-none overflow-auto border-none">
         <CardHeader className="py-4 flex flex-row items-center justify-between">
           <Button
             variant="ghost"
             size="icon"
             onClick={handleBackToStep}
-            className="h-10 w-10"
+            className="h-10 w-10 text-white"
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>
-          <CardTitle className="text-2xl font-bold text-center flex-grow">Cart</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center flex-grow text-white">Cart</CardTitle>
           <Button
             variant="ghost"
             size="icon"
             onClick={handleClearList}
-            className="h-10 w-10"
+            className="h-10 w-10 text-white"
           >
             <Trash2 className="h-6 w-6" />
           </Button>
@@ -254,16 +254,16 @@ export default function Cart() {
             {items.map(item => (
               <li 
                 key={item.id} 
-                className={`flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-lg shadow fade-in ${
+                className={`flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[#191919] border-none hover:bg-[#383838] transition-all duration-300 ease-in-out p-4 rounded-lg shadow fade-in ${
                   items.length > 1 ? 'staggered-animation' : ''
                 }`}
               >
-                <span className="text-xl break-words mr-2 mb-2 sm:mb-0 w-full sm:w-auto">{item.name}</span>
+                <span className="text-xl break-words mr-2 mb-2 sm:mb-0 w-full sm:w-auto text-white">{item.name}</span>
                 <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
-                  <span className="text-md font-regular whitespace-nowrap">
+                  <span className="text-md font-regular whitespace-nowrap text-white">
                     {formatNumber(item.price)} {selectedCountry !== " " ? selectedCountry : ''}
                   </span>
-                  <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10 flex-shrink-0">
+                  <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10 flex-shrink-0 bg-[#191919]">
                     <Trash2 className="h-5 w-5" />
                   </Button>
                 </div>
@@ -272,40 +272,39 @@ export default function Cart() {
           </ul>
         </CardContent>
       </Card>
-      <div className="sticky bottom-0 w-full bg-white border-t border-gray-200 pt-2 relative">
+      <div className="sticky bottom-0 w-full bg-[#000000] pt-2 relative">
         <LinearBlur
           side="bottom"
           steps={16}
           strength={32}
-          tint="rgba(255, 255, 255, 1)"
+          tint="rgba(0, 0, 0, 1)"
           style={{
             position: "absolute",
             inset: 0,
             transform: "translateY(-100%)",
             height: "100px",
             pointerEvents: "none",
-            opacity: 0.8
           }}
         />
         <div className="px-4">
-          <div className="flex flex-col py-2 border-b border-gray-200 mb-2 w-full">
+          <div className="flex flex-col py-2 mb-2 w-full">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">Subtotal:</span>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-white">Subtotal:</span>
+              <span className="text-sm text-white">
                 {formatNumber(subtotal)} {selectedCountry !== " " ? selectedCountry : ''}
               </span>
             </div>
             {selectedCountry === 'USD' && selectedState !== " " && (
               <div className="flex justify-between items-center mt-1">
-                <span className="text-sm text-gray-500">Tax ({taxRate}%):</span>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-white">Tax ({taxRate}%):</span>
+                <span className="text-sm text-white">
                   {formatNumber(taxAmount)} {selectedCountry}
                 </span>
               </div>
             )}
             <div className="flex justify-between items-center mt-1">
-              <span className="text-lg font-bold text-gray-800">Total:</span>
-              <span className="text-lg font-bold text-gray-800">
+              <span className="text-lg font-bold text-white">Total:</span>
+              <span className="text-lg font-bold text-white">
                 {formatNumber(total)} {selectedCountry !== " " ? selectedCountry : ''}
               </span>
             </div>
@@ -317,7 +316,7 @@ export default function Cart() {
               value={newItemName}
               onChange={handleItemNameChange}
               onKeyDown={handleItemNameKeyDown}
-              className="w-full text-lg h-12 text-gray-800 font-normal placeholder-gray-400"
+              className="w-full text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
               ref={itemNameInputRef}
               maxLength={265}
             />
@@ -329,10 +328,10 @@ export default function Cart() {
                 value={newItemPrice}
                 onChange={handlePriceChange}
                 onKeyDown={handlePriceKeyDown}
-                className="flex-grow text-lg h-12 text-gray-800 font-normal placeholder-gray-400"
+                className="flex-grow text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
                 ref={itemPriceInputRef}
               />
-              <Button type="submit" size="icon" className="h-12 w-12">
+              <Button type="submit" size="icon" className="h-12 w-12 text-white">
                 <Plus className="h-6 w-6" />
               </Button>
             </div>

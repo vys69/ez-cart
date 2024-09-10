@@ -24,9 +24,9 @@ export function ConfirmationModal({ isOpen, onClose, onConfirm, onCancel, action
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px] bg-white">
+      <DialogContent className="sm:max-w-[425px] bg-black border-2 border-[#383838] rounded-lg">
         <DialogHeader>
-          <DialogTitle className='text-black'>{isClearing ? "Clear Cart?" : "Save Changes?"}</DialogTitle>
+          <DialogTitle className='text-white'>{isClearing ? "Clear Cart?" : "Save Changes?"}</DialogTitle>
           <DialogDescription>
             {isClearing 
               ? "Are you sure you want to clear all items from your cart? This action cannot be undone."
@@ -38,7 +38,7 @@ export function ConfirmationModal({ isOpen, onClose, onConfirm, onCancel, action
             <Button 
               type="button" 
               variant="secondary" 
-              className="flex-1" 
+              className="flex-1 bg-[#383838] border-none rounded-lg text-white hover:bg-[#191919] hover:border-[#383838]" 
               onClick={isClearing ? onCancel : onConfirm}
             >
               {isClearing ? "No, cancel" : "Yes, save"}

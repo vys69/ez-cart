@@ -56,12 +56,12 @@ export default function StepHandler({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-[#000000] flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md p-6 rounded-lg">
-        <h1 className="text-lg mb-6 text-center text-black">
+        <h1 className="text-lg mb-6 text-center text-white">
           {stepId === 1 ? "Select Your Country" : "Select Your State"}
         </h1>
-        <p className="text-sm mb-6 text-center text-black">
+        <p className="text-sm mb-6 text-center text-white">
           {stepId === 1 ? "Select your country to view the sales tax rate for your location." : "Select your state to view the sales tax rate for your location."}
         </p>
         {stepId === 1 ? (
@@ -72,13 +72,13 @@ export default function StepHandler({ params }: { params: { id: string } }) {
         <div className="flex justify-between mt-6 gap-4">
           <Button 
             onClick={handleBack}
-            className="bg-white text-black hover:bg-gray-200 flex-1 py-3 text-sm"
+            className="bg-[#191919] text-white hover:bg-[#2a2a2a] flex-1 py-3 text-sm"
           >
             Back
           </Button>
           <Button 
             onClick={handleNext}
-            className="bg-black text-white hover:bg-gray-800 flex-1 py-3 text-sm"
+            className="bg-[#191919] text-white hover:bg-[#2a2a2a] flex-1 py-3 text-sm"
             disabled={stepId === 1 ? !selectedCountry : !selectedState}
           >
             Next

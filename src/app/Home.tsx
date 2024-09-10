@@ -11,11 +11,11 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mb-8 text-black">EZCart</h1>
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center">
+      <h1 className="text-4xl font-bold mb-8 text-white">EZCart</h1>
       <Button 
         onClick={handleGoShopping}
-        className="bg-black text-white hover:bg-gray-800 px-6 py-3 text-lg"
+        className="bg-[#191919] text-white hover:bg-[#2a2a2a] px-3 py-3 text-lg"
       >
         Go Shopping
       </Button>
