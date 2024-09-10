@@ -68,8 +68,8 @@ function CartContent() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'My Shopping Cart',
-          text: 'Check out my shopping cart!',
+          title: 'My cart 🛒',
+          text: 'Check out what I have in my cart 😎',
           url: shareableUrl,
         });
         toast({
