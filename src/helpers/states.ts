@@ -1,4 +1,5 @@
 export const states = [
+    { name: "None", taxRate: 0 },
     { name: "Alabama", taxRate: 4 },
     { name: "Alaska", taxRate: 0 },
     { name: "Arizona", taxRate: 5.6 },

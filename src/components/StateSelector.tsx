@@ -9,13 +9,13 @@ interface StateSelectorProps {
 export default function StateSelector({ onSelect, selectedState }: StateSelectorProps) {
   return (
     <Select value={selectedState || undefined} onValueChange={onSelect}>
-      <SelectTrigger className="w-full h-12 text-lg">
+      <SelectTrigger className="w-full h-12 text-black">
         <SelectValue placeholder="Select a state" />
       </SelectTrigger>
       <SelectContent>
         {states.map((state) => (
-          <SelectItem key={state.name} value={state.name} className="text-lg">
-            {state.name} <h6 className="text-sm text-gray-500">Sales tax: {state.taxRate}%</h6>
+          <SelectItem key={state.name} value={state.name} className="">
+            {state.name} <h6 className="align-center">Sales tax: {state.taxRate}%</h6>
           </SelectItem>
         ))}
       </SelectContent>

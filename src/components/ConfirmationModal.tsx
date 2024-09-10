@@ -1,12 +1,6 @@
+import React from 'react'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 
 interface ConfirmationModalProps {
   isOpen: boolean
@@ -17,35 +11,24 @@ interface ConfirmationModalProps {
 }
 
 export function ConfirmationModal({ isOpen, onClose, onConfirm, onCancel, action }: ConfirmationModalProps) {
-  const title = action === 'back' ? "Save Changes?" : "Clear List?"
-  const description = action === 'back' 
-    ? "You have unsaved changes. Do you want to save them before going back?"
-    : "Are you sure you want to clear the entire list? This action cannot be undone."
-  const confirmText = action === 'back' ? "Yes, save" : "Yes, clear"
-  const cancelText = action === 'back' ? "No, discard" : "No, keep list"
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white rounded-lg p-6 max-w-sm mx-auto">
+      <DialogContent className="bg-white w-[90%] rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-center text-black">{title}</DialogTitle>
-          <DialogDescription className="text-center mt-2">
-            {description}
+          <DialogTitle className='text-black'>Save Changes?</DialogTitle>
+          <DialogDescription>
+            You have unsaved changes. Do you want to save them before {action === 'back' ? 'going back' : 'clearing the cart'}?
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="flex flex-col space-y-2 mt-6">
-          <Button 
-            onClick={onConfirm}
-            className={`w-full ${action === 'back' ? 'bg-white text-black border border-gray-300 hover:bg-gray-100' : 'bg-red-600 text-white hover:bg-red-700'}`}
-          >
-            {confirmText}
-          </Button>
-          <Button 
-            onClick={onCancel}
-            className={`w-full ${action === 'back' ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-white text-black border border-gray-300 hover:bg-gray-100'}`}
-          >
-            {cancelText}
-          </Button>
+        <DialogFooter className="sm:justify-start">
+          <div className="w-full flex justify-between gap-4 flex-col">
+            <Button type="button" variant="secondary" className="flex-1 text-black hover:bg-gray-200" onClick={onConfirm}>
+              Yes, save
+            </Button>
+            <Button type="button" variant="destructive" className="flex-1" onClick={onCancel}>
+              No, discard
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

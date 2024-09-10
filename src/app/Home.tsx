@@ -1,36 +1,13 @@
 "use client"
 
-import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 
 export default function Home() {
   const router = useRouter()
 
-  useEffect(() => {
-    const storedCurrency = localStorage.getItem("currency")
-    const storedState = localStorage.getItem("state")
-
-    if (!storedCurrency) {
-      router.push('/step/1')
-    } else if (!storedState) {
-      router.push('/step/2')
-    } else {
-      router.push('/cart')
-    }
-  }, [router])
-
   const handleGoShopping = () => {
-    const storedCurrency = localStorage.getItem("currency")
-    const storedState = localStorage.getItem("state")
-
-    if (!storedCurrency) {
-      router.push('/step/1')
-    } else if (!storedState) {
-      router.push('/step/2')
-    } else {
-      router.push('/cart')
-    }
+    router.push('/step/1')
   }
 
   return (

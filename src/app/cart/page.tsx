@@ -37,15 +37,18 @@ export default function Cart() {
   useEffect(() => {
     const storedCurrency = localStorage.getItem("currency")
     const storedState = localStorage.getItem("state")
-    const storedItems = localStorage.getItem("groceryItems")
-    if (storedCurrency && storedState) {
+    
+    if (storedCurrency) {
       setSelectedCountry(storedCurrency)
-      setSelectedState(storedState)
+      if (storedCurrency === 'USD' && storedState) {
+        setSelectedState(storedState)
+      }
     }
+
+    // Load items from localStorage
+    const storedItems = localStorage.getItem("groceryItems")
     if (storedItems) {
-      const parsedItems = JSON.parse(storedItems)
-      setItems(parsedItems)
-      setOriginalItems(parsedItems)
+      setItems(JSON.parse(storedItems))
     }
   }, [])
 
@@ -109,7 +112,8 @@ export default function Cart() {
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.price, 0)
-  const taxRate = selectedState ? states.find(s => s.name === selectedState)?.taxRate || 0 : 0
+  const taxRate = selectedCountry === 'USD' && selectedState && selectedState !== " " ? 
+    states.find(s => s.name === selectedState)?.taxRate || 0 : 0
   const taxAmount = (subtotal * taxRate) / 100
   const total = subtotal + taxAmount
 
@@ -198,7 +202,7 @@ export default function Cart() {
               <li key={item.id} className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
                 <span className="text-lg">{item.name}</span>
                 <div className="flex items-center space-x-4">
-                  <span className="text-lg font-regular">{formatNumber(item.price)} {selectedCountry}</span>
+                  <span className="text-lg font-regular">{formatNumber(item.price)} {selectedCountry !== " " ? selectedCountry : ''}</span>
                   <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10">
                     <Trash2 className="h-5 w-5" />
                   </Button>
@@ -226,11 +230,17 @@ export default function Cart() {
           <div className="flex flex-col py-2 border-b border-gray-200 mb-2 w-full">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-500">Subtotal:</span>
-              <span className="text-sm text-gray-500">{formatNumber(subtotal)} {selectedCountry}</span>
+              <span className="text-sm text-gray-500">{formatNumber(subtotal)} {selectedCountry !== " " ? selectedCountry : ''}</span>
             </div>
+            {selectedCountry === 'USD' && selectedState !== " " && (
+              <div className="flex justify-between items-center mt-1">
+                <span className="text-sm text-gray-500">Tax ({taxRate}%):</span>
+                <span className="text-sm text-gray-500">{formatNumber(taxAmount)} {selectedCountry}</span>
+              </div>
+            )}
             <div className="flex justify-between items-center mt-1">
               <span className="text-lg font-bold text-gray-800">Total:</span>
-              <span className="text-lg font-bold text-gray-800">{formatNumber(total)} {selectedCountry}</span>
+              <span className="text-lg font-bold text-gray-800">{formatNumber(total)} {selectedCountry !== " " ? selectedCountry : ''}</span>
             </div>
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col space-y-2 pb-4 w-full">
@@ -268,6 +278,9 @@ export default function Cart() {
         onCancel={handleCancelAction}
         action={modalAction}
       />
+      {selectedCountry === 'USD' && (
+        <div>State: {selectedState}</div>
+      )}
     </div>
   )
 }

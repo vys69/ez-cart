@@ -90,3 +90,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.select-trigger .select-value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}

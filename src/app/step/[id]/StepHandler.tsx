@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation'
 import CountrySelector from '@/components/CountrySelector'
 import StateSelector from '@/components/StateSelector'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, ChevronRight } from "lucide-react"
 
 export default function StepHandler({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -22,14 +20,10 @@ export default function StepHandler({ params }: { params: { id: string } }) {
     if (stepId === 1) {
       setSelectedCountry(storedCurrency)
     } else if (stepId === 2) {
-      if (!storedCurrency) {
-        router.push('/step/1')
-      } else {
-        setSelectedCountry(storedCurrency)
-        setSelectedState(storedState)
-      }
+      setSelectedCountry(storedCurrency)
+      setSelectedState(storedState)
     }
-  }, [stepId, router])
+  }, [stepId])
 
   const handleCountrySelect = (country: string) => {
     setSelectedCountry(country)
@@ -42,7 +36,11 @@ export default function StepHandler({ params }: { params: { id: string } }) {
   const handleNext = () => {
     if (stepId === 1 && selectedCountry) {
       localStorage.setItem("currency", selectedCountry)
-      router.push('/step/2')
+      if (selectedCountry === 'USD') {
+        router.push('/step/2')
+      } else {
+        router.push('/cart')
+      }
     } else if (stepId === 2 && selectedState) {
       localStorage.setItem("state", selectedState)
       router.push('/cart')
@@ -50,41 +48,43 @@ export default function StepHandler({ params }: { params: { id: string } }) {
   }
 
   const handleBack = () => {
-    if (stepId === 2) {
-      localStorage.removeItem("currency")
+    if (stepId === 1) {
+      router.push('/')
+    } else if (stepId === 2) {
       router.push('/step/1')
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center p-4">
-      <Card className="w-full">
-        <CardHeader className="flex flex-row items-center">
-          {stepId === 2 && (
-            <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10 mr-2">
-              <ArrowLeft className="h-6 w-6" />
-            </Button>
-          )}
-          <CardTitle className="text-2xl font-bold text-center flex-grow">
-            {stepId === 1 ? "Select Your Country" : "Select Your State"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {stepId === 1 && (
-            <CountrySelector onSelect={handleCountrySelect} selectedCountry={selectedCountry} />
-          )}
-          {stepId === 2 && (
-            <StateSelector onSelect={handleStateSelect} selectedState={selectedState} />
-          )}
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-md p-6 rounded-lg">
+        <h1 className="text-lg mb-6 text-center text-black">
+          {stepId === 1 ? "Select Your Country" : "Select Your State"}
+        </h1>
+        <p className="text-sm mb-6 text-center text-black">
+          {stepId === 1 ? "Select your country to view the sales tax rate for your location." : "Select your state to view the sales tax rate for your location."}
+        </p>
+        {stepId === 1 ? (
+          <CountrySelector onSelect={handleCountrySelect} selectedCountry={selectedCountry} />
+        ) : (
+          <StateSelector onSelect={handleStateSelect} selectedState={selectedState} />
+        )}
+        <div className="flex justify-between mt-6 gap-4">
           <Button 
-            className="w-full mt-6 h-12 text-lg"
-            onClick={handleNext} 
+            onClick={handleBack}
+            className="bg-white text-black hover:bg-gray-200 flex-1 py-3 text-sm"
+          >
+            Back
+          </Button>
+          <Button 
+            onClick={handleNext}
+            className="bg-black text-white hover:bg-gray-800 flex-1 py-3 text-sm"
             disabled={stepId === 1 ? !selectedCountry : !selectedState}
           >
-            Next <ChevronRight className="ml-2 h-5 w-5" />
+            Next
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
