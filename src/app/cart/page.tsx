@@ -9,6 +9,8 @@ import { states } from "@/helpers/states"
 import { useRouter } from "next/navigation"
 import { ConfirmationModal } from "@/components/ConfirmationModal"
 import { LinearBlur } from "progressive-blur"
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
 
 interface GroceryItem {
   id: number
@@ -16,12 +18,14 @@ interface GroceryItem {
   price: number
 }
 
-const formatNumber = (num: number): string => {
+const formatNumber = (num: number | null | undefined): string => {
+  if (num == null) return '0.00'; // Return '0.00' for null or undefined
   return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 export default function Cart() {
   const router = useRouter()
+  const { toast } = useToast()
   const [items, setItems] = useState<GroceryItem[]>([])
   const [newItemName, setNewItemName] = useState("")
   const [newItemPrice, setNewItemPrice] = useState("")
@@ -56,11 +60,18 @@ export default function Cart() {
     localStorage.setItem("groceryItems", JSON.stringify(newItems))
   }
 
+  const handleItemNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= 265) {
+      setNewItemName(value);
+    }
+  }
+
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     
-    // Allow only numbers and a single decimal point
-    if (/^\d*\.?\d*$/.test(value)) {
+    // Allow only numbers and a single decimal point, max 10 digits before decimal
+    if (/^\d{0,10}(\.\d*)?$/.test(value)) {
       setNewItemPrice(value);
     }
   }
@@ -79,31 +90,78 @@ export default function Cart() {
     }
   }
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted"); // Debug log
+
+    if (newItemName.length > 100) {
+      console.log("Item name too long"); // Debug log
+      toast({
+        variant: "destructive",
+        title: "Input Error",
+        description: "Item name cannot exceed 100 characters.",
+        action: <ToastAction altText="Try again">Close</ToastAction>,
+      });
+      setNewItemName("");
+      return;
+    }
+
+    if (newItemPrice.split('.')[0].length > 10) {
+      console.log("Price too long"); // Debug log
+      toast({
+        variant: "destructive",
+        title: "Input Error",
+        description: "Price cannot exceed 10 digits before the decimal point.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+      setNewItemPrice("");
+      return;
+    }
+
+    console.log("Validation passed, calling addItem"); // Debug log
+    addItem();
+  }
+
   const addItem = () => {
-    if (newItemName && newItemPrice) {
+    console.log("addItem called"); // Debug log
+    if (newItemName.trim() && newItemPrice.trim()) {
+      const price = parseFloat(newItemPrice);
+      if (isNaN(price) || !isFinite(price)) {
+        console.log("Invalid price"); // Debug log
+        toast({
+          variant: "destructive",
+          title: "Input Error",
+          description: "Please enter a valid price.",
+        });
+        setNewItemPrice("");
+        return;
+      }
       const newItem: GroceryItem = {
         id: Date.now(),
-        name: newItemName,
-        price: parseFloat(parseFloat(newItemPrice).toFixed(2))
-      }
-      const updatedItems = [...items, newItem]
-      setItems(updatedItems)
-      saveItemsToLocalStorage(updatedItems)
-      setNewItemName("")
-      setNewItemPrice("")
+        name: newItemName.trim(),
+        price: parseFloat(price.toFixed(2))
+      };
+      console.log("New item:", newItem); // Debug log
+      const updatedItems = [...items, newItem];
+      setItems(updatedItems);
+      saveItemsToLocalStorage(updatedItems);
+      setNewItemName("");
+      setNewItemPrice("");
       
       if (itemNameInputRef.current) {
-        itemNameInputRef.current.focus()
+        itemNameInputRef.current.focus();
       }
-
+  
       // Schedule the scroll after the state has been updated and the DOM has been re-rendered
       setTimeout(() => {
         if (listRef.current) {
-          listRef.current.scrollTop = listRef.current.scrollHeight
+          listRef.current.scrollTop = listRef.current.scrollHeight;
         }
-      }, 0)
+      }, 0);
+    } else {
+      console.log("Item name or price is empty"); // Debug log
     }
-  }
+  };
 
   const removeItem = (id: number) => {
     const updatedItems = items.filter(item => item.id !== id)
@@ -169,14 +227,9 @@ export default function Cart() {
     // For 'clear' action, just close the modal and do nothing
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    addItem()
-  }
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Card className="flex-grow flex flex-col rounded-none">
+      <Card className="flex-grow flex flex-col rounded-none overflow-auto">
         <CardHeader className="py-4 flex flex-row items-center justify-between">
           <Button
             variant="ghost"
@@ -199,11 +252,13 @@ export default function Cart() {
         <CardContent className="flex-grow overflow-hidden flex flex-col relative px-4">
           <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-32">
             {items.map(item => (
-              <li key={item.id} className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
-                <span className="text-lg">{item.name}</span>
-                <div className="flex items-center space-x-4">
-                  <span className="text-lg font-regular">{formatNumber(item.price)} {selectedCountry !== " " ? selectedCountry : ''}</span>
-                  <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10">
+              <li key={item.id} className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded-lg shadow">
+                <span className="text-lg break-words mr-2 mb-2 sm:mb-0 w-full sm:w-auto">{item.name}</span>
+                <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
+                  <span className="text-lg font-regular whitespace-nowrap">
+                    {formatNumber(item.price)} {selectedCountry !== " " ? selectedCountry : ''}
+                  </span>
+                  <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10 flex-shrink-0">
                     <Trash2 className="h-5 w-5" />
                   </Button>
                 </div>
@@ -232,17 +287,23 @@ export default function Cart() {
           <div className="flex flex-col py-2 border-b border-gray-200 mb-2 w-full">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-500">Subtotal:</span>
-              <span className="text-sm text-gray-500">{formatNumber(subtotal)} {selectedCountry !== " " ? selectedCountry : ''}</span>
+              <span className="text-sm text-gray-500">
+                {formatNumber(subtotal)} {selectedCountry !== " " ? selectedCountry : ''}
+              </span>
             </div>
             {selectedCountry === 'USD' && selectedState !== " " && (
               <div className="flex justify-between items-center mt-1">
                 <span className="text-sm text-gray-500">Tax ({taxRate}%):</span>
-                <span className="text-sm text-gray-500">{formatNumber(taxAmount)} {selectedCountry}</span>
+                <span className="text-sm text-gray-500">
+                  {formatNumber(taxAmount)} {selectedCountry}
+                </span>
               </div>
             )}
             <div className="flex justify-between items-center mt-1">
               <span className="text-lg font-bold text-gray-800">Total:</span>
-              <span className="text-lg font-bold text-gray-800">{formatNumber(total)} {selectedCountry !== " " ? selectedCountry : ''}</span>
+              <span className="text-lg font-bold text-gray-800">
+                {formatNumber(total)} {selectedCountry !== " " ? selectedCountry : ''}
+              </span>
             </div>
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col space-y-2 pb-4 w-full">
@@ -250,10 +311,11 @@ export default function Cart() {
               type="text"
               placeholder="Item name"
               value={newItemName}
-              onChange={(e) => setNewItemName(e.target.value)}
+              onChange={handleItemNameChange}
               onKeyDown={handleItemNameKeyDown}
               className="w-full text-lg h-12 text-gray-800 font-normal placeholder-gray-400"
               ref={itemNameInputRef}
+              maxLength={265}
             />
             <div className="flex space-x-2 w-full">
               <Input
@@ -280,9 +342,6 @@ export default function Cart() {
         onCancel={handleCancelAction}
         action={modalAction}
       />
-      {selectedCountry === 'USD' && (
-        <div>State: {selectedState}</div>
-      )}
     </div>
   )
 }

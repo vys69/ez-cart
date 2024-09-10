@@ -11,22 +11,45 @@ interface ConfirmationModalProps {
 }
 
 export function ConfirmationModal({ isOpen, onClose, onConfirm, onCancel, action }: ConfirmationModalProps) {
+  const isClearing = action === 'clear'
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      // If the dialog is being closed (open is false),
+      // call onCancel and then onClose
+      onCancel()
+      onClose()
+    }
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white w-[90%] rounded-lg">
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[425px] bg-white">
         <DialogHeader>
-          <DialogTitle className='text-black'>Save Changes?</DialogTitle>
+          <DialogTitle className='text-black'>{isClearing ? "Clear Cart?" : "Save Changes?"}</DialogTitle>
           <DialogDescription>
-            You have unsaved changes. Do you want to save them before {action === 'back' ? 'going back' : 'clearing the cart'}?
+            {isClearing 
+              ? "Are you sure you want to clear all items from your cart? This action cannot be undone."
+              : "You have unsaved changes. Do you want to save them before going back?"}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="sm:justify-start">
           <div className="w-full flex justify-between gap-4 flex-col">
-            <Button type="button" variant="secondary" className="flex-1 text-black hover:bg-gray-200" onClick={onConfirm}>
-              Yes, save
+            <Button 
+              type="button" 
+              variant="secondary" 
+              className="flex-1" 
+              onClick={isClearing ? onCancel : onConfirm}
+            >
+              {isClearing ? "No, cancel" : "Yes, save"}
             </Button>
-            <Button type="button" variant="destructive" className="flex-1" onClick={onCancel}>
-              No, discard
+            <Button 
+              type="button" 
+              variant="destructive" 
+              className="flex-1" 
+              onClick={isClearing ? onConfirm : onCancel}
+            >
+              {isClearing ? "Yes, clear cart" : "No, discard"}
             </Button>
           </div>
         </DialogFooter>
