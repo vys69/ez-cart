@@ -33,7 +33,7 @@ To set up EZCart on your local machine:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/vys69/EZ-Cart.git
+   https://github.com/vys69/ez-cart.git
    ```
 2. Navigate to the project directory:
    ```
