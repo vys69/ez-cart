@@ -33,7 +33,7 @@ export default function Cart() {
   const [selectedState, setSelectedState] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalAction, setModalAction] = useState<'back' | 'clear'>('back')
-  const [originalItems, setOriginalItems] = useState<GroceryItem[]>([])
+  const [originalItems] = useState<GroceryItem[]>([])
   const listRef = useRef<HTMLUListElement>(null)
   const itemNameInputRef = useRef<HTMLInputElement>(null)
   const itemPriceInputRef = useRef<HTMLInputElement>(null)
@@ -272,7 +272,6 @@ export default function Cart() {
           side="bottom"
           steps={16}
           strength={32}
-          children={<div className="absolute inset-0 bg-white"></div>}
           tint="rgba(255, 255, 255, 1)"
           style={{
             position: "absolute",
