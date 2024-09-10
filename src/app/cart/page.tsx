@@ -217,13 +217,15 @@ export default function Cart() {
           side="bottom"
           steps={16}
           strength={32}
-          tint="rgba(255, 255, 255, 0.8)"
+          children={<div className="absolute inset-0 bg-white"></div>}
+          tint="rgba(255, 255, 255, 1)"
           style={{
             position: "absolute",
             inset: 0,
             transform: "translateY(-100%)",
             height: "100px",
             pointerEvents: "none",
+            opacity: 0.8
           }}
         />
         <div className="px-4">
