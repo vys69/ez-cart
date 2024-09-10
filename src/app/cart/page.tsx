@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Plus, Trash2, ArrowLeft } from "lucide-react"
+import { Plus, Minus, Trash2, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,6 +16,7 @@ interface GroceryItem {
   id: number
   name: string
   price: number
+  quantity: number
 }
 
 const formatNumber = (num: number | null | undefined): string => {
@@ -41,7 +42,7 @@ export default function Cart() {
   useEffect(() => {
     const storedCurrency = localStorage.getItem("currency")
     const storedState = localStorage.getItem("state")
-    
+
     if (storedCurrency) {
       setSelectedCountry(storedCurrency)
       if (storedCurrency === 'USD' && storedState) {
@@ -69,7 +70,7 @@ export default function Cart() {
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
+
     // Allow only numbers and a single decimal point, max 10 digits before decimal
     if (/^\d{0,10}(\.\d*)?$/.test(value)) {
       setNewItemPrice(value);
@@ -139,7 +140,8 @@ export default function Cart() {
       const newItem: GroceryItem = {
         id: Date.now(),
         name: newItemName.trim(),
-        price: parseFloat(price.toFixed(2))
+        price: parseFloat(price.toFixed(2)),
+        quantity: 1
       };
       console.log("New item:", newItem); // Debug log
       const updatedItems = [...items, newItem];
@@ -147,11 +149,11 @@ export default function Cart() {
       saveItemsToLocalStorage(updatedItems);
       setNewItemName("");
       setNewItemPrice("");
-      
+
       if (itemNameInputRef.current) {
         itemNameInputRef.current.focus();
       }
-  
+
       // Schedule the scroll after the state has been updated and the DOM has been re-rendered
       setTimeout(() => {
         if (listRef.current) {
@@ -169,8 +171,17 @@ export default function Cart() {
     saveItemsToLocalStorage(updatedItems)
   }
 
-  const subtotal = items.reduce((sum, item) => sum + item.price, 0)
-  const taxRate = selectedCountry === 'USD' && selectedState && selectedState !== " " ? 
+  const updateItemQuantity = (id: number, newQuantity: number) => {
+    if (newQuantity < 1) return; // Prevent quantity from going below 1
+    const updatedItems = items.map(item => 
+      item.id === id ? { ...item, quantity: newQuantity } : item
+    );
+    setItems(updatedItems);
+    saveItemsToLocalStorage(updatedItems);
+  }
+
+  const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  const taxRate = selectedCountry === 'USD' && selectedState && selectedState !== " " ?
     states.find(s => s.name === selectedState)?.taxRate || 0 : 0
   const taxAmount = (subtotal * taxRate) / 100
   const total = subtotal + taxAmount
@@ -182,19 +193,12 @@ export default function Cart() {
   }, [items])
 
   const handleBackToStep = () => {
-    const hasUnsavedChanges = JSON.stringify(items) !== JSON.stringify(originalItems)
-    const hasNewItemInput = newItemName.trim() !== '' || newItemPrice.trim() !== ''
-
-    if (items.length === 0 && !hasNewItemInput) {
-      // Cart is empty and no new item input, go back without confirmation
-      router.push('/step/2')
-    } else if (!hasUnsavedChanges && !hasNewItemInput) {
-      // No unsaved changes and no new item input, go back without confirmation
-      router.push('/step/2')
-    } else {
-      // Show confirmation modal
+    // Check if there are any changes
+    if (JSON.stringify(items) !== JSON.stringify(originalItems)) {
       setModalAction('back')
       setIsModalOpen(true)
+    } else {
+      router.push('/step/2')
     }
   }
 
@@ -220,11 +224,7 @@ export default function Cart() {
 
   const handleCancelAction = () => {
     setIsModalOpen(false)
-    if (modalAction === 'back') {
-      // Discard changes and go back
-      router.push('/step/2')
-    }
-    // For 'clear' action, just close the modal and do nothing
+    // Do not navigate here
   }
 
   return (
@@ -235,28 +235,28 @@ export default function Cart() {
             variant="ghost"
             size="icon"
             onClick={handleBackToStep}
-            className="h-10 w-10 text-white"
+            className="h-10 w-10 bg-transparent text-white hover:text-gray-400 hover:bg-transparent"
           >
             <ArrowLeft className="h-6 w-6" />
           </Button>
           <CardTitle className="text-2xl font-bold text-center flex-grow text-white">Cart</CardTitle>
           <Button
-            variant="ghost"
+            variant="default"
             size="icon"
             onClick={handleClearList}
-            className="h-10 w-10 text-white"
+            className="h-10 w-10 bg-transparent text-white hover:text-gray-400 hover:bg-transparent"
           >
             <Trash2 className="h-6 w-6" />
           </Button>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden flex flex-col relative px-4">
-          <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-32">
+          <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-10">
             {items.map(item => (
-              <li 
-                key={item.id} 
+              <li
+                key={item.id}
                 className={`
                   relative overflow-hidden
-                  flex flex-col sm:flex-row justify-between items-start sm:items-center
+                  flex flex-col
                   bg-gradient-custom
                   p-4 rounded-lg shadow fade-in
                   transition-all duration-300 ease-in-out
@@ -266,15 +266,41 @@ export default function Cart() {
               >
                 <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-[#121212] opacity-80 shadow-custom-red"></div>
                 <div className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full bg-[#1a1a1a] shadow-custom-white"></div>
-                
-                <span className="text-xl break-words mr-2 mb-2 sm:mb-0 w-full sm:w-auto text-white relative">{item.name}</span>
-                <div className="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end relative">
-                  <span className="text-md font-regular whitespace-nowrap text-white">
+
+                <div className="flex justify-between items-center mb-2 relative">
+                  <span className="text-xl break-words text-white">{item.name}</span>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="link"
+                      size="icon"
+                      onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                      className="h-8 w-8 rounded-full text-white hover:text-red-300"
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="text-white w-8 text-center">{item.quantity}</span>
+                    <Button
+                      variant="link"
+                      size="icon"
+                      onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                      className="h-8 w-8 rounded-full text-white hover:text-green-300"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="default" 
+                      size="icon" 
+                      onClick={() => removeItem(item.id)} 
+                      className="h-8 w-8 flex-shrink-0 bg-[#191919] z-0 hover:text-red-300"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="relative">
+                  <span className="text-md font-regular text-white">
                     {formatNumber(item.price)} {selectedCountry !== " " ? selectedCountry : ''}
                   </span>
-                  <Button variant="destructive" size="icon" onClick={() => removeItem(item.id)} className="h-10 w-10 flex-shrink-0 bg-[#191919] z-0">
-                    <Trash2 className="h-5 w-5" />
-                  </Button>
                 </div>
               </li>
             ))}

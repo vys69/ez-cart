@@ -24,7 +24,7 @@ export function ConfirmationModal({ isOpen, onClose, onConfirm, onCancel, action
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[425px] bg-black border-2 border-[#383838] rounded-lg">
+      <DialogContent className="max-w-[90%] md:max-w-[425px] bg-black border-2 border-[#383838] rounded-lg">
         <DialogHeader>
           <DialogTitle className='text-white'>{isClearing ? "Clear Cart?" : "Save Changes?"}</DialogTitle>
           <DialogDescription>
@@ -39,7 +39,7 @@ export function ConfirmationModal({ isOpen, onClose, onConfirm, onCancel, action
               type="button" 
               variant="secondary" 
               className="flex-1 bg-[#383838] border-none rounded-lg text-white hover:bg-[#191919] hover:border-[#383838]" 
-              onClick={isClearing ? onCancel : onConfirm}
+              onClick={(e) => { e.stopPropagation(); onCancel(); }}
             >
               {isClearing ? "No, cancel" : "Yes, save"}
             </Button>
@@ -47,7 +47,7 @@ export function ConfirmationModal({ isOpen, onClose, onConfirm, onCancel, action
               type="button" 
               variant="destructive" 
               className="flex-1" 
-              onClick={isClearing ? onConfirm : onCancel}
+              onClick={(e) => { e.stopPropagation(); onConfirm(); }}
             >
               {isClearing ? "Yes, clear cart" : "No, discard"}
             </Button>
