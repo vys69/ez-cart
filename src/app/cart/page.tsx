@@ -7,7 +7,7 @@ import { Plus, Minus, Trash2, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { states } from "@/helpers/states"
+import { countries, Country, TaxRegion } from "@/helpers/taxes"
 import { ConfirmationModal } from "@/components/ConfirmationModal"
 import { LinearBlur } from "progressive-blur"
 import { useToast } from "@/hooks/use-toast"
@@ -24,12 +24,12 @@ interface GroceryItem {
 
 interface SharedData {
   items: GroceryItem[];
-  currency: string | null;
-  state: string | null;
+  countryCode: string | null;
+  region: string | null;
 }
 
 const formatNumber = (num: number | null | undefined): string => {
-  if (num == null) return '0.00'; // Return '0.00' for null or undefined
+  if (num == null) return '0.00';
   return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
@@ -40,8 +40,8 @@ function CartContent() {
   const [items, setItems] = useState<GroceryItem[]>([])
   const [newItemName, setNewItemName] = useState("")
   const [newItemPrice, setNewItemPrice] = useState("")
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
-  const [selectedState, setSelectedState] = useState<string | null>(null)
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null)
+  const [selectedRegion, setSelectedRegion] = useState<TaxRegion | null>(null)
   const [backModalOpen, setBackModalOpen] = useState(false)
   const [clearModalOpen, setClearModalOpen] = useState(false)
   const listRef = useRef<HTMLUListElement>(null)
@@ -59,8 +59,8 @@ function CartContent() {
   const handleShare = async () => {
     const sharedData: SharedData = {
       items,
-      currency: selectedCountry,
-      state: selectedCountry === 'USD' ? selectedState : null
+      countryCode: selectedCountry?.code || null,
+      region: selectedRegion?.name || null
     };
     const encodedData = encodeData(sharedData);
     const shareableUrl = `${window.location.origin}${window.location.pathname}?data=${encodedData}`;
@@ -90,7 +90,6 @@ function CartContent() {
       fallbackShare(shareableUrl);
     }
 
-    // Optionally, update the URL without reloading the page
     router.push(`${window.location.pathname}?data=${encodedData}`, { scroll: false });
   };
 
@@ -129,14 +128,16 @@ function CartContent() {
           setItems([]);
         }
 
-        if (parsedData.currency) {
-          setSelectedCountry(parsedData.currency);
-          localStorage.setItem("currency", parsedData.currency);
-        }
+        if (parsedData.countryCode) {
+          const country = countries.find(c => c.code === parsedData.countryCode);
+          setSelectedCountry(country || null);
+          localStorage.setItem("country", parsedData.countryCode);
 
-        if (parsedData.currency === 'USD' && parsedData.state) {
-          setSelectedState(parsedData.state);
-          localStorage.setItem("state", parsedData.state);
+          if (parsedData.region) {
+            const region = country?.children.find(r => r.name === parsedData.region);
+            setSelectedRegion(region || null);
+            localStorage.setItem("region", parsedData.region);
+          }
         }
       } catch (error) {
         console.error('Failed to parse shared data:', error);
@@ -148,13 +149,16 @@ function CartContent() {
   }, [searchParams]);
 
   const loadFromLocalStorage = () => {
-    const storedCurrency = localStorage.getItem("currency");
-    const storedState = localStorage.getItem("state");
+    const storedCountryCode = localStorage.getItem("country");
+    const storedRegion = localStorage.getItem("region");
 
-    if (storedCurrency) {
-      setSelectedCountry(storedCurrency);
-      if (storedCurrency === 'USD' && storedState) {
-        setSelectedState(storedState);
+    if (storedCountryCode) {
+      const country = countries.find(c => c.code === storedCountryCode);
+      setSelectedCountry(country || null);
+
+      if (storedRegion) {
+        const region = country?.children.find(r => r.name === storedRegion);
+        setSelectedRegion(region || null);
       }
     }
 
@@ -181,7 +185,6 @@ function CartContent() {
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    // Allow only numbers and a single decimal point, max 10 digits before decimal
     if (/^\d{0,10}(\.\d*)?$/.test(value)) {
       setNewItemPrice(value);
     }
@@ -189,24 +192,24 @@ function CartContent() {
 
   const handleItemNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newItemName.trim() !== '') {
-      e.preventDefault() // Prevent form submission
+      e.preventDefault()
       itemPriceInputRef.current?.focus()
     }
   };
 
   const handlePriceKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && newItemPrice.trim() !== '') {
-      e.preventDefault() // Prevent form submission
+      e.preventDefault()
       addItem()
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted"); // Debug log
+    console.log("Form submitted");
 
     if (newItemName.length > 100) {
-      console.log("Item name too long"); // Debug log
+      console.log("Item name too long");
       toast({
         variant: "destructive",
         title: "Input Error",
@@ -218,7 +221,7 @@ function CartContent() {
     }
 
     if (newItemPrice.split('.')[0].length > 10) {
-      console.log("Price too long"); // Debug log
+      console.log("Price too long");
       toast({
         variant: "destructive",
         title: "Input Error",
@@ -229,16 +232,16 @@ function CartContent() {
       return;
     }
 
-    console.log("Validation passed, calling addItem"); // Debug log
+    console.log("Validation passed, calling addItem");
     addItem();
   };
 
   const addItem = () => {
-    console.log("addItem called"); // Debug log
+    console.log("addItem called");
     if (newItemName.trim() && newItemPrice.trim()) {
       const price = parseFloat(newItemPrice);
       if (isNaN(price) || !isFinite(price)) {
-        console.log("Invalid price"); // Debug log
+        console.log("Invalid price");
         toast({
           variant: "destructive",
           title: "Input Error",
@@ -253,7 +256,7 @@ function CartContent() {
         price: parseFloat(price.toFixed(2)),
         quantity: 1
       };
-      console.log("New item:", newItem); // Debug log
+      console.log("New item:", newItem);
       const updatedItems = [...items, newItem];
       setItems(updatedItems);
       saveItemsToLocalStorage(updatedItems);
@@ -264,14 +267,13 @@ function CartContent() {
         itemNameInputRef.current.focus();
       }
 
-      // Schedule the scroll after the state has been updated and the DOM has been re-rendered
       setTimeout(() => {
         if (listRef.current) {
           listRef.current.scrollTop = listRef.current.scrollHeight;
         }
       }, 0);
     } else {
-      console.log("Item name or price is empty"); // Debug log
+      console.log("Item name or price is empty");
     }
   };
 
@@ -282,7 +284,7 @@ function CartContent() {
   }
 
   const updateItemQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return; // Prevent quantity from going below 1
+    if (newQuantity < 1) return;
     const updatedItems = items.map(item => 
       item.id === id ? { ...item, quantity: newQuantity } : item
     );
@@ -291,8 +293,7 @@ function CartContent() {
   }
 
   const subtotal = items ? items.reduce((sum, item) => sum + (item.price * item.quantity), 0) : 0
-  const taxRate = selectedCountry === 'USD' && selectedState && selectedState !== " " ?
-    states.find(s => s.name === selectedState)?.taxRate || 0 : 0
+  const taxRate = selectedRegion?.taxRate || 0
   const taxAmount = (subtotal * taxRate) / 100
   const total = subtotal + taxAmount
 
@@ -415,7 +416,7 @@ function CartContent() {
                 </div>
                 <div className="relative">
                   <span className="text-md font-regular text-white">
-                    {formatNumber(item.price)} {selectedCountry !== " " ? selectedCountry : ''}
+                    {formatNumber(item.price)} {selectedCountry?.code || ''}
                   </span>
                 </div>
               </li>
@@ -442,21 +443,21 @@ function CartContent() {
             <div className="flex justify-between items-center">
               <span className="text-sm text-white">Subtotal:</span>
               <span className="text-sm text-white">
-                {formatNumber(subtotal)} {selectedCountry !== " " ? selectedCountry : ''}
+                {formatNumber(subtotal)} {selectedCountry?.code || ''}
               </span>
             </div>
-            {selectedCountry === 'USD' && selectedState !== " " && (
+            {selectedRegion && (
               <div className="flex justify-between items-center mt-1">
                 <span className="text-sm text-white">Tax ({taxRate}%):</span>
                 <span className="text-sm text-white">
-                  {formatNumber(taxAmount)} {selectedCountry}
+                  {formatNumber(taxAmount)} {selectedCountry?.code}
                 </span>
               </div>
             )}
             <div className="flex justify-between items-center mt-1">
               <span className="text-lg font-bold text-white">Total:</span>
               <span className="text-lg font-bold text-white">
-                {formatNumber(total)} {selectedCountry !== " " ? selectedCountry : ''}
+                {formatNumber(total)} {selectedCountry?.code || ''}
               </span>
             </div>
           </div>
