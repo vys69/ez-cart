@@ -3,8 +3,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'noplace',
-  description: 'make new friends',
+  title: 'EZ Cart',
+  description: 'makes shopping easy',
   manifest: '/manifest.json',
   icons: {
     icon: '/image/pwa/icon_192.png',
