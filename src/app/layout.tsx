@@ -1,41 +1,28 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
+import type { Metadata } from 'next';
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import manifest from "./manifest";  // Changed this line
 
 export const metadata: Metadata = {
-  title: "EZCart",
-  description: "For ez shopping",
-};
+  title: 'noplace',
+  description: 'make new friends',
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/image/pwa/icon_192.png',
+  },
+}
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#000000" />
-        <link rel="apple-touch-icon" href="/192.png" />
-      </head>
-      <body className="font-sans">
-        <main>{children}</main>
+    <html lang="en">
+      <body>
+        {children}
         <Toaster />
       </body>
     </html>
-  );
+  )
 }
