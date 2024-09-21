@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://raw.githubusercontent.com/gitdagray/my-blogposts/main/images/og-card.png',
-        secureUrl: 'https://raw.githubusercontent.com/gitdagray/my-blogposts/main/images/og-card.png',
+        url: 'https://raw.githubusercontent.com/vys69/ez-cart/refs/heads/master/public/image/ogimage.jpg',
+        secureUrl: 'https://raw.githubusercontent.com/vys69/ez-cart/refs/heads/master/public/image/ogimage.jpg',
         width: 1200,
         height: 630,
         alt: 'Preview image for EZ Cart',
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     description: "Your shopping, made easy",
     creator: '@fuckgrimlabs',
     images: {
-      url: 'https://raw.githubusercontent.com/gitdagray/my-blogposts/main/images/og-card.png',
+      url: 'https://raw.githubusercontent.com/vys69/ez-cart/refs/heads/master/public/image/ogimage.jpg',
       alt: 'Preview image for EZ Cart',
     }
   },
