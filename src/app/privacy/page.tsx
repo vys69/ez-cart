@@ -15,7 +15,7 @@ export default function Privacy() {
             <div className="bg-[#0e0e0e] p-6 rounded-lg text-center max-w-sm w-full">
                 <h1 className="text-white text-2xl font-bold mb-4">privacy policy</h1>
                 <p className="text-gray-300 mb-6">
-                    i don't collect or sell ur data, end of story.
+                    i don&apos;t collect or sell ur data, end of story.
                 </p>
                 <Button 
                     onClick={handleGoBack}
