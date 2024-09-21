@@ -36,7 +36,7 @@ export default function Home() {
       <main>
         <section className="container mx-auto px-4 pt-20 pb-0 text-center">
           <h1 className="text-6xl font-bold mb-4">
-            Your shopping,<br />Made easy
+            Your shopping,<br />made easy
           </h1>
           <p className="text-xl text-gray-400 mb-8">Smart shopping cart calculator for savvy shoppers</p>
           <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShopping}>
