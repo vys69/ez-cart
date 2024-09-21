@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import manifest from "./manifest";  // Changed this line
 
 export const metadata: Metadata = {
   title: 'noplace',
