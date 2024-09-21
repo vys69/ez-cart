@@ -5,15 +5,15 @@ import localFont from "next/font/local";
 
 export const metadata: Metadata = {
   title: 'EZ Cart',
-  description: 'makes shopping easy',
+  description: 'Your shopping, made easy',
   manifest: '/manifest.json',
   icons: {
     icon: '/image/pwa/icon_192.png',
   },
   openGraph: {
     title: "EZ Cart",
-    description: "makes shopping easy",
-    url: 'https://www.ripgrim.com/',
+    description: "Your shopping, made easy",
+    url: 'https://coolstartupname.com/',
     siteName: "EZ Cart",
     type: 'website',
     images: [
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@yesdavidgray',
     title: "EZ Cart",
-    description: "makes shopping easy",
+    description: "Your shopping, made easy",
     creator: '@fuckgrimlabs',
     images: {
       url: 'https://raw.githubusercontent.com/gitdagray/my-blogposts/main/images/og-card.png',

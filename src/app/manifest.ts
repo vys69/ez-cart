@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'EZ Cart',
     short_name: 'EZ Cart',
-    description: 'makes shopping easy',
+    description: 'Your shopping, made easy',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
