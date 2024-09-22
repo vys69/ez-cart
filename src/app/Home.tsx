@@ -10,12 +10,17 @@ import { FlipWords } from "@/components/ui/flip-words";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import ShinyGrid from "@/components/ui/ShinyGrid";
 import { LucideHome, Info, ArrowDownToLine } from "lucide-react";
-import { handleGoShopping } from '@/helpers/navigationHelpers';
 
 export default function Home() {
   const router = useRouter()
 
-  const handleGoShoppingClick = () => handleGoShopping();
+  const handleGoShopping = () => {
+    if (localStorage.getItem("setupSkipped")) {
+      router.push('/cart')
+    } else {
+      router.push('/step/1')
+    }
+  }
 
   const navItems = [
     {
@@ -70,7 +75,7 @@ export default function Home() {
               EZ Cart
             </div>
             <div className="flex flex-row">
-              <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShoppingClick}>
+              <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShopping}>
                 Go Shopping
               </Button>
             </div>
@@ -93,7 +98,7 @@ export default function Home() {
             >
               Start shopping smarter
             </Button> */}
-            <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShoppingClick}>
+            <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShopping}>
               Start shopping smarter
             </Button>
             <p className="text-sm text-gray-400 mt-4">No registration required</p>
@@ -147,7 +152,7 @@ export default function Home() {
               EZ Cart automatically applies the correct sales tax<br />for your state, ensuring accurate totals every time
             </p>
             <p className="text-sm text-gray-400 mt-4 mb-4">(Currently available for USA only)</p>
-            <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShoppingClick}>
+            <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShopping}>
               Calculate with confidence
             </Button>
             <p className="text-sm text-gray-400 mt-4">Supports all 50 states</p>

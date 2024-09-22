@@ -247,12 +247,12 @@ function CartContent() {
           <div className="flex flex-col py-2 mb-2 w-full">
             <div className="flex justify-between items-center">
               <span className="text-sm text-white">Subtotal:</span>
-              {formatNumber(subtotal)} {selectedCountry?.code || ''}
+              <span className="text-white">{formatNumber(subtotal)} {selectedCountry?.code || ''}</span>
             </div>
             {selectedRegion && (
               <div className="flex justify-between items-center mt-1">
                 <span className="text-sm text-white">Tax ({taxRate}%):</span>
-                {formatNumber(taxAmount)} {selectedCountry?.code}
+                <span className="text-white">{formatNumber(taxAmount)} {selectedCountry?.code}</span>
               </div>
             )}
             <div className="flex justify-between items-center mt-1">
@@ -261,33 +261,33 @@ function CartContent() {
                 {formatNumber(total)} {selectedCountry?.code || ''}
               </TextTransition>
             </div>
-          </div>
-          <form onSubmit={handleSubmit} className="flex flex-col space-y-2 pb-4 w-full">
-            <Input
-              type="text"
-              name="itemName"
-              placeholder="Item name"
-              className="w-full text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
-              ref={itemNameInputRef}
-              maxLength={100}
-              onKeyDown={handleItemNameKeyDown}
-            />
-            <div className="flex space-x-2 w-full">
+            <form onSubmit={handleSubmit} className="flex flex-col space-y-2 pb-4 w-full">
               <Input
                 type="text"
-                name="itemPrice"
-                inputMode="decimal"
-                placeholder="Price"
-                className="flex-grow text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
-                ref={itemPriceInputRef}
-                maxLength={10}
-                onKeyDown={handlePriceKeyDown}
+                name="itemName"
+                placeholder="Item name"
+                className="w-full text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
+                ref={itemNameInputRef}
+                maxLength={100}
+                onKeyDown={handleItemNameKeyDown}
               />
-              <Button type="submit" size="icon" className="h-12 w-12 bg-white text-black">
-                <Plus className="h-6 w-6" />
-              </Button>
-            </div>
-          </form>
+              <div className="flex space-x-2 w-full">
+                <Input
+                  type="text"
+                  name="itemPrice"
+                  inputMode="decimal"
+                  placeholder="Price"
+                  className="flex-grow text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
+                  ref={itemPriceInputRef}
+                  maxLength={10}
+                  onKeyDown={handlePriceKeyDown}
+                />
+                <Button type="submit" size="icon" className="h-12 w-12 bg-white text-black">
+                  <Plus className="h-6 w-6" />
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
       <ConfirmationModal
