@@ -17,7 +17,6 @@ export default function Home() {
   }
 
   const words = ["easy", "simple", "effortless"];
-  const logoWords = ["Easy Cart", "EZ-Cart", "EZ Cart"];
   const preciseSynoynms = ["Precise", "Accurate", "Exact"];
 
   return (
@@ -27,8 +26,8 @@ export default function Home() {
           fill="white"
         />
       <div className="min-h-screen bg-black text-white overflow-hidden">
-        <header className="container mx-auto px-4 py-6 flex justify-between items-center relative z-10">
-          <div className="text-2xl font-bold flex items-center">
+        <header className="bg-transparent container mx-auto px-4 py-6 flex justify-between items-center relative z-10">
+          <div className="text-2xl font-bold flex items-center bg-transparent">
             <Image
               src="/image/pwa/128.png"
               alt="EZ Cart Logo"
@@ -37,7 +36,7 @@ export default function Home() {
               className="inline-block"
               draggable={false}
             />
-            <FlipWords words={logoWords} duration={2000} className='text-white' />
+             EZ Cart
           </div>
         </header>
 
@@ -107,9 +106,10 @@ export default function Home() {
             <h2 className="text-4xl font-bold mb-4">
             <FlipWords words={preciseSynoynms} duration={2000} className='text-white'/>totals with<br />your state&apos;s local sales tax
             </h2>
-            <p className="text-xl text-gray-400 mb-10">
-              EZ Cart automatically applies the correct sales tax<br />for your state, ensuring accurate totals every time<br />(Currently available for USA only)
+            <p className="text-xl text-gray-400">
+              EZ Cart automatically applies the correct sales tax<br />for your state, ensuring accurate totals every time
             </p>
+            <p className="text-sm text-gray-400 mt-4 mb-4">(Currently available for USA only)</p>
             <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShopping}>
               Calculate with confidence
             </Button>
