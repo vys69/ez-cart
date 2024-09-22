@@ -1,6 +1,4 @@
-import React, { useState, useRef } from 'react';
-import { useSwipeable } from 'react-swipeable';
-import { Button } from "@/components/ui/button";
+import React, { useState, useRef, useEffect } from 'react';
 import { Trash2 } from "lucide-react";
 
 interface SwipeableCardProps {
@@ -10,27 +8,26 @@ interface SwipeableCardProps {
 
 const SwipeableCard: React.FC<SwipeableCardProps> = ({ children, onDelete }) => {
   const [offset, setOffset] = useState(0);
+  const [startX, setStartX] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const handlers = useSwipeable({
-    onSwiping: (eventData) => {
-      if (eventData.dir === 'Left') {
-        setOffset(Math.min(0, Math.max(-100, eventData.deltaX)));
-      }
-    },
-    onSwipedLeft: (eventData) => {
-      if (eventData.deltaX < -30) {
-        setOffset(-60);
-      } else {
-        setOffset(0);
-      }
-    },
-    onSwipedRight: () => {
+  const handleStart = (clientX: number) => {
+    setStartX(clientX);
+  };
+
+  const handleMove = (clientX: number) => {
+    const diff = startX - clientX;
+    setOffset(Math.min(0, Math.max(-60, -diff)));
+  };
+
+  const handleEnd = () => {
+    if (offset < -30) {
+      setOffset(-60);
+    } else {
       setOffset(0);
-    },
-    trackMouse: true,
-  });
+    }
+  };
 
   const handleDelete = () => {
     setIsDeleting(true);
@@ -39,27 +36,43 @@ const SwipeableCard: React.FC<SwipeableCardProps> = ({ children, onDelete }) => 
     }, 300);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
+        setOffset(0);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative overflow-hidden" {...handlers} ref={cardRef}>
+    <div 
+      className="relative overflow-hidden cursor-grab active:cursor-grabbing" 
+      ref={cardRef}
+      onTouchStart={(e) => handleStart(e.touches[0].clientX)}
+      onTouchMove={(e) => handleMove(e.touches[0].clientX)}
+      onTouchEnd={handleEnd}
+      onMouseDown={(e) => handleStart(e.clientX)}
+      onMouseMove={(e) => e.buttons === 1 && handleMove(e.clientX)}
+      onMouseUp={handleEnd}
+      onMouseLeave={handleEnd}
+    >
       <div
-        className={`transition-transform duration-300 ease-out ${isDeleting ? 'transform -translate-x-full' : ''
-          }`}
+        className={`transition-transform duration-300 ease-out ${isDeleting ? 'transform -translate-x-full' : ''}`}
         style={{ transform: `translateX(${offset}px)` }}
       >
         {children}
       </div>
       <div
-        className="absolute top-0 right-0 bottom-0 flex items-center justify-center bg-red-500 transition-transform duration-300 ease-out"
+        className="absolute top-0 right-0 bottom-0 flex items-center justify-center bg-red-500 transition-transform duration-300 ease-out cursor-pointer"
         style={{ width: '60px', transform: `translateX(${offset + 60}px)` }}
+        onClick={handleDelete}
       >
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleDelete}
-          className="h-8 w-8 text-white hover:bg-red-600"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        <Trash2 className="h-4 w-4 text-white" />
       </div>
     </div>
   );

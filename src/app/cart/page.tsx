@@ -367,7 +367,7 @@ function CartContent() {
           </div>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden flex flex-col relative px-4">
-          <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-10">
+          <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-10 cursor-grab">
             {items.map((item) => (
               <SwipeableCard key={item.id} onDelete={() => removeItem(item.id)}>
                 <li
@@ -375,40 +375,43 @@ function CartContent() {
       ${items.length > 1 ? 'staggered-animation' : ''}
     `}
                 >
-                  <div className="flex justify-between items-center mb-2 relative">
-                    <span className="text-xl break-words text-white">{item.name}</span>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex flex-col">
+                      <span className="text-xl break-words text-white">{item.name}</span>
+                      <span className="text-md font-regular text-white">
+                        {formatNumber(item.price)} {selectedCountry?.code || ''}
+                      </span>
+                    </div>
                     <div className="flex items-center space-x-2">
                       <Button
                         variant="link"
                         size="icon"
                         onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-primary-foreground shadow hover:bg-primary/90 h-8 w-8 flex-shrink-0 bg-[#191919] z-0 hover:text-red-300"
+                        className="h-8 w-8 rounded-full text-white hover:text-red-300"
                       >
                         <Minus className="h-4 w-4" />
                       </Button>
-                      <span className="text-white w-8 text-center">{item.quantity}</span>
+                      <Input
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => {
+                          const newQuantity = parseInt(e.target.value, 10);
+                          if (!isNaN(newQuantity) && newQuantity > 0) {
+                            updateItemQuantity(item.id, newQuantity);
+                          }
+                        }}
+                        className="w-12 h-8 text-center text-white bg-transparent border border-gray-600 rounded"
+                        min="1"
+                      />
                       <Button
                         variant="link"
                         size="icon"
                         onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-primary-foreground shadow hover:bg-primary/90 h-8 w-8 flex-shrink-0 bg-[#191919] z-0 hover:text-red-300"
+                        className="h-8 w-8 rounded-full text-white hover:text-green-300"
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="default"
-                        size="icon"
-                        onClick={() => removeItem(item.id)}
-                        className="h-8 w-8 rounded-full bg-transparent text-white hover:text-red-300"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
                     </div>
-                  </div>
-                  <div className="relative">
-                    <span className="text-md font-regular text-white">
-                      {formatNumber(item.price)} {selectedCountry?.code || ''}
-                    </span>
                   </div>
                 </li>
               </SwipeableCard>
@@ -417,19 +420,6 @@ function CartContent() {
         </CardContent>
       </Card>
       <div className="sticky bottom-0 w-full bg-[#000000] pt-2 relative">
-        {/* <LinearBlur
-          side="bottom"
-          steps={16}
-          strength={32}
-          tint="rgba(0, 0, 0, 1)"
-          style={{
-            position: "absolute",
-            inset: 0,
-            transform: "translateY(-100%)",
-            height: "100px",
-            pointerEvents: "none",
-          }}
-        /> */}
         <div className="px-4 bg-black">
           <div className="flex flex-col py-2 mb-2 w-full">
             <div className="flex justify-between items-center">

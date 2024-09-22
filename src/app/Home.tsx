@@ -33,6 +33,7 @@ export default function Home() {
               width={64}
               height={64}
               className="inline-block"
+              draggable={false}
             />
             <span>EZ Cart</span>
           </div>
@@ -90,6 +91,7 @@ export default function Home() {
                 width={1600}
                 height={1200}
                 className="rounded-2xl shadow-2xl mx-auto"
+                draggable={false}
               />
             </div>
           </section>
@@ -142,6 +144,7 @@ export default function Home() {
                 width={533}
                 height={400}
                 className="rounded-2xl shadow-2xl mx-auto"
+                draggable={false}
               />
             </div>
           </section>
