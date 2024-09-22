@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import Link from 'next/link'
 import Image from 'next/image'
-import { LinearBlur } from "progressive-blur"
+// import { LinearBlur } from "progressive-blur"
 import { Spotlight } from "@/components/ui/Spotlight";
 import { FlipWords } from "@/components/ui/flip-words";
 
@@ -59,7 +59,7 @@ export default function Home() {
 
           <section className="container mx-auto px-4 py-0">
             <div className="bg-black rounded-3xl px-8 relative overflow-hidden">
-              <LinearBlur
+              {/* <LinearBlur
                 side="bottom"
                 steps={32}
                 strength={4}
@@ -83,7 +83,7 @@ export default function Home() {
                   height: "30%",
                   pointerEvents: "none",
                 }}
-              />
+              /> */}
               <Image
                 src="/image/landing/landing.png"
                 alt="EZ Cart Screenshot"
@@ -111,7 +111,7 @@ export default function Home() {
 
           <section className="container mx-auto px-4 pt-5 pb-0">
             <div className="bg-black rounded-3xl p-8 relative overflow-hidden">
-              <LinearBlur
+              {/* <LinearBlur
                 side="bottom"
                 steps={16}
                 strength={2}
@@ -135,7 +135,7 @@ export default function Home() {
                   height: "30%",
                   pointerEvents: "none",
                 }}
-              />
+              /> */}
               <Image
                 src="/image/landing/split.png"
                 alt="EZ Cart Screenshot"
