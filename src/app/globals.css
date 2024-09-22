@@ -2,38 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
- :root {
-  --background: #000000;
-  --foreground: #171717;
-}
-/*
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000;
-    --foreground: #000000;
-  }
-} */
-
-body, html {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-geist-sans);
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
-    --card: #000000;
-    --card-foreground: #000000;
-    --popover: #000000;
-    --popover-foreground: #000000;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
@@ -44,17 +20,19 @@ body, html {
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
   }
+
   .dark {
-    --background: #000000;
+    --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -70,6 +48,7 @@ body, html {
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
     --chart-1: 220 70% 50%;
@@ -80,67 +59,11 @@ body, html {
   }
 }
 
-/* @layer base {
+@layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
-  }
-} */
-
-.select-trigger .select-value {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-}
-
-
-/**
- * ----------------------------------------
- * animation slide-bottom
- * ----------------------------------------
- */
- @-webkit-keyframes slide-bottom {
-  0% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-  }
-  100% {
-    -webkit-transform: translateY(100px);
-            transform: translateY(100px);
-  }
-}
-@keyframes slide-bottom {
-  0% {
-    -webkit-transform: translateY(0);
-            transform: translateY(0);
-  }
-  100% {
-    -webkit-transform: translateY(100px);
-            transform: translateY(100px);
-  }
-}
-
-.slide-bottom {
-	-webkit-animation: slide-bottom 0.3s ease-in-out both;
-	        animation: slide-bottom 0.3s ease-in-out both;
-}
-
-/* Replace the @for loop with this */
-.staggered-animation {
-  animation-delay: calc(var(--animation-order, 0) * 0.1s);
-}
-
-.fade-in {
-  animation: fadeIn 0.25s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
