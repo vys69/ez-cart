@@ -43,6 +43,7 @@ export default function Onboarding() {
   const handleCountrySelect = (country: string) => {
     console.log('Country selected:', country);
     setSelectedCountry(country);
+    console.log('Selected country state updated');
   }
 
   const handleStateSelect = (state: string) => {
@@ -103,7 +104,12 @@ export default function Onboarding() {
               : "Select your state to view the sales tax rate for your location."}
           </p>
           {step === 0 ? (
-            <CountrySelector onSelect={handleCountrySelect} selectedCountry={selectedCountry} />
+            <CountrySelector
+              onSelect={(country: string) => {
+                handleCountrySelect(country);
+              }}
+              selectedCountry={selectedCountry}
+            />
           ) : (
             <StateSelector onSelect={handleStateSelect} selectedState={selectedState} />
           )}

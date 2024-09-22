@@ -3,20 +3,25 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { countries } from '@/helpers/countries'
 
 interface CountrySelectorProps {
-  onSelect: (country: string) => void
-  selectedCountry: string | null
+  onSelect: (country: string) => void;
+  selectedCountry: string | null;
 }
 
-export default function CountrySelector({ onSelect, selectedCountry }: CountrySelectorProps) {
+const CountrySelector: React.FC<CountrySelectorProps> = ({ onSelect, selectedCountry }) => {
+  const handleCountrySelect = (country: string) => {
+    console.log('Country selected in CountrySelector:', country);
+    onSelect(country);
+  };
+
   return (
-    <Select onValueChange={onSelect} value={selectedCountry || undefined}>
+    <Select onValueChange={handleCountrySelect} value={selectedCountry || undefined}>
       <SelectTrigger className="w-full h-12 text-white border-[#383838] border-2 rounded-md">
         <SelectValue placeholder="Select a country" />
       </SelectTrigger>
       <SelectContent className="text-white text-lg bg-[#191919] border-[#383838] border-2 rounded-md">
         {countries.map((country) => (
-          <SelectItem 
-            key={country.currency} 
+          <SelectItem
+            key={country.currency}
             value={country.currency}
             disabled={country.disabled}
             className="hover:bg-[#2a2a2a]"
@@ -28,3 +33,5 @@ export default function CountrySelector({ onSelect, selectedCountry }: CountrySe
     </Select>
   )
 }
+
+export default CountrySelector
