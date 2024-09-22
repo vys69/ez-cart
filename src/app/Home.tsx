@@ -168,7 +168,7 @@ export default function Home() {
           </div>
         </footer>
       </div>
-      <ShinyGrid className='opacity-[0.1]'/>
+      <ShinyGrid className='opacity-[0.5]'/>
     </>
   )
 }
