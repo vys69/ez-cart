@@ -15,6 +15,9 @@ import { ToastAction } from "@/components/ui/toast"
 import LottieTrash from "@/components/LottieTrash"
 import LottieArrow from "@/components/LottieArrow"
 import SwipeableCard from "@/components/ui/SwipeableCard"
+import ShinyGrid from "@/components/ui/ShinyGrid"
+
+
 
 interface GroceryItem {
   id: number
@@ -350,8 +353,8 @@ function CartContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#00000050] flex flex-col">
-      <Card className="bg-[#000000] flex-grow flex flex-col rounded-none overflow-auto border-none">
+    <div className="min-h-screen bg-[#00000050] flex flex-col relative z-10">
+  <Card className="bg-[#000000] flex-grow flex flex-col rounded-none overflow-auto border-none relative z-10">
         <CardHeader className="py-4 flex flex-row items-center justify-between">
           <Button
             variant="ghost"
@@ -450,7 +453,7 @@ function CartContent() {
           </ul>
         </CardContent>
       </Card>
-      <div className="sticky bottom-0 w-full bg-[#000000] pt-2 relative">
+      <div className="sticky bottom-0 w-full bg-[#000000] pt-2 relative z-10">
         <LinearBlur
           side="bottom"
           steps={32}
@@ -540,6 +543,7 @@ function CartContent() {
           onConfirm: handleConfirmClear
         }}
       />
+    <ShinyGrid className='opacity-[0.1] fixed inset-0 z-[0]'/>
     </div>
   )
 }

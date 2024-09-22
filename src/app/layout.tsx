@@ -15,7 +15,7 @@ export const metadata: Metadata = {
       { url: '/image/meta/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/image/meta/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   manifest: '/image/meta/site.webmanifest',

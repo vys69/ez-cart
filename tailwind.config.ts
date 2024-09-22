@@ -67,6 +67,14 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        eclipse: {
+          "0%": {
+            transform: "translateX(115%)",
+          },
+          "100%": {
+            transform: "translateX(-115%)",
+          },
+        },
         shimmer: {
           from: {
             "backgroundPosition": "0 0"
@@ -91,6 +99,7 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "shimmer": "shimmer 2s linear infinite",
         spotlight: "spotlight 2s ease .75s 1 forwards",
+        eclipse: "eclipse 3s linear infinite",
       },
     },
   },

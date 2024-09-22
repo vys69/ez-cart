@@ -12,7 +12,7 @@ export default function Privacy() {
 
     return (
         <div className="min-h-screen bg-black flex items-center justify-center">
-            <div className="bg-[#0e0e0e] p-6 rounded-lg text-center max-w-sm w-full">
+            <div className="p-6 rounded-lg text-center max-w-sm w-full">
                 <h1 className="text-white text-2xl font-bold mb-4">terms of service</h1>
                 <p className="text-gray-300 mb-6">
                    nothing to see here, just go shop lol

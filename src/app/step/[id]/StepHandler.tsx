@@ -90,12 +90,14 @@ export default function StepHandler({ params }: { params: { id: string } }) {
           </Button>
         </div>
         <Button 
+          variant="ghost"
           onClick={handleSkip}
-          className="w-full mt-4 bg-[#202020] text-white hover:bg-[#2a2a2a] flex-1 text-sm"
+          className="w-full mt-4 mb-4 text-white hover:bg-transparent hover:text-neutral-400 flex-1 text-sm"
+
         >
           Skip setup<ArrowRightIcon className="w-4 h-4 ml-2" />
         </Button>
-        <span className="text-sm text-white mt-4 text-neutral-800">
+        <span className="text-sm text-white mt-4 text-[#808080]">
           By skipping, you won&apos;t be able to calculate sales taxes.
         </span>
       </div>

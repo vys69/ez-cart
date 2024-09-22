@@ -7,13 +7,17 @@ import Image from 'next/image'
 // import { LinearBlur } from "progressive-blur"
 import { Spotlight } from "@/components/ui/Spotlight";
 import { FlipWords } from "@/components/ui/flip-words";
-
+import ShinyGrid from "@/components/ui/ShinyGrid";
 
 export default function Home() {
   const router = useRouter()
 
   const handleGoShopping = () => {
-    router.push('/step/1')
+    if (localStorage.getItem("setupSkipped")) {
+      router.push('/cart')
+    } else {
+      router.push('/step/1')
+    }
   }
 
   const words = ["easy", "simple", "effortless"];
@@ -22,7 +26,7 @@ export default function Home() {
   return (
     <>
         <Spotlight
-          className="spotlight animate-spotlight absolute top-0 left-0 w-full h-full z-[999999] w-full"
+          className="spotlight animate-spotlight absolute top-0 left-[470px] w-full h-full z-[999999] w-full"
           fill="white"
         />
       <div className="min-h-screen bg-black text-white overflow-hidden">
@@ -164,6 +168,7 @@ export default function Home() {
           </div>
         </footer>
       </div>
+      <ShinyGrid className='opacity-[0.1]'/>
     </>
   )
 }
