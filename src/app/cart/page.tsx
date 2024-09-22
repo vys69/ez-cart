@@ -326,7 +326,7 @@ function CartContent() {
 
   return (
     <div className="min-h-screen bg-[#000000] flex flex-col">
-      <Card className="flex-grow flex flex-col rounded-none overflow-auto border-none">
+      <Card className="bg-[#000000] flex-grow flex flex-col rounded-none overflow-auto border-none">
         <CardHeader className="py-4 flex flex-row items-center justify-between">
           <Button
             variant="ghost"
@@ -381,8 +381,7 @@ function CartContent() {
                   ${items.length > 1 ? 'staggered-animation' : ''}
                 `}
               >
-                <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-[#121212] opacity-80 shadow-custom-red"></div>
-                <div className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full bg-[#1a1a1a] shadow-custom-white"></div>
+
 
                 <div className="flex justify-between items-center mb-2 relative">
                   <span className="text-xl break-words text-white">{item.name}</span>

@@ -56,7 +56,8 @@ export default function StepHandler({ params }: { params: { id: string } }) {
   }
 
   const handleSkip = () => {
-    router.push('/cart')
+    localStorage.setItem("setupSkipped", "true");
+    router.push('/cart');
   }
 
   return (
@@ -92,7 +93,7 @@ export default function StepHandler({ params }: { params: { id: string } }) {
           onClick={handleSkip}
           className="w-full mt-4 bg-[#202020] text-white hover:bg-[#2a2a2a] flex-1 text-sm"
         >
-          Skip <ArrowRightIcon className="w-4 h-4 ml-2" />
+          Skip setup<ArrowRightIcon className="w-4 h-4 ml-2" />
         </Button>
         <span className="text-sm text-white mt-4 text-neutral-800">
           By skipping, you won&apos;t be able to calculate sales taxes.
