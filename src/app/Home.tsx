@@ -158,7 +158,7 @@ export default function Home() {
             <p className="text-sm text-gray-400 mt-4">Supports all 50 states</p>
           </section>
 
-          <section className="container mx-auto px-4 pt-10 pb-10">
+          <section className="container mx-auto px-4 pt-10 pb-12">
             <div className="bg-black rounded-3xl p-8 relative overflow-hidden">
               {/* <LinearBlur
                 side="bottom"
@@ -196,7 +196,9 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="install" className="container mx-auto px-4 pt-2 pb-12 text-center">
+          <div className="h-[1px] bg-neutral-900 w-[90%] mx-auto" />
+
+          <section id="install" className="container mx-auto px-4 pt-16 pb-12 text-center">
             <h2 className="text-4xl font-bold mb-4">
               Use EZ Cart Offline
             </h2>
