@@ -431,7 +431,7 @@ function CartContent() {
                             updateItemQuantity(item.id, newQuantity);
                           }
                         }}
-                        className="w-12 h-8 text-center text-white bg-transparent border border-gray-600 rounded"
+                        className="w-12 h-8 text-center text-white bg-transparent border-0 border-gray-600 rounded no-spinner"
                         min="1"
                       />
                       <Button
@@ -451,6 +451,19 @@ function CartContent() {
         </CardContent>
       </Card>
       <div className="sticky bottom-0 w-full bg-[#000000] pt-2 relative">
+        <LinearBlur
+          side="bottom"
+          steps={32}
+          strength={8}
+          tint="rgba(0, 0, 0, 1)"
+          style={{
+            position: "absolute",
+            inset: 0,
+            transform: "translateY(-100%)",
+            height: "100px",
+            pointerEvents: "none",
+          }}
+        />
         <div className="px-4 bg-black">
           <div className="flex flex-col py-2 mb-2 w-full">
             <div className="flex justify-between items-center">
