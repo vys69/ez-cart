@@ -239,6 +239,7 @@ export default function Home() {
           <div className="flex justify-center space-x-4 text-sm text-gray-400">
             <Link href="/terms" className="hover:text-white">Terms of service</Link>
             <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
+            <Link href="https://github.com/vys69/ez-cart" className="hover:text-white">GitHub</Link>
           </div>
         </footer>
       </div>
