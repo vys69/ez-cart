@@ -67,7 +67,7 @@ export default function Home() {
           </section>
 
           <section className="container mx-auto px-4 py-10">
-            <div className="bg-black rounded-3xl px-8 relative overflow-hidden">
+            <div className="bg-transparent rounded-3xl px-8 relative overflow-hidden">
               {/* <LinearBlur
                 side="bottom"
                 steps={32}
@@ -168,7 +168,7 @@ export default function Home() {
           </div>
         </footer>
       </div>
-      <ShinyGrid className='opacity-[0.5]'/>
+      <ShinyGrid className='opacity-[0.3]'/>
     </>
   )
 }
