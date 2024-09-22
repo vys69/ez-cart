@@ -9,14 +9,14 @@ export interface TaxRegion {
   export interface Country {
     name: string;
     code: string;
-    children: TaxRegion[];
+    regions: TaxRegion[];
   }
   
   export const countries: Country[] = [
     {
       name: "United States",
       code: "USD",
-      children: [
+      regions: [
         { name: "None", taxRate: 0 },
         { name: "Alabama", taxRate: 4 },
         { name: "Alaska", taxRate: 0 },
@@ -74,7 +74,7 @@ export interface TaxRegion {
     {
       name: "Canada",
       code: "CAD",
-      children: [
+      regions: [
         { name: "None", gst: 0, pst: 0, hst: 0, taxRate: 0 },
         { name: "Alberta", gst: 5, pst: 0, hst: 0, taxRate: 5 },
         { name: "British Columbia", gst: 5, pst: 7, hst: 0, taxRate: 12 },
@@ -94,7 +94,7 @@ export interface TaxRegion {
     {
       name: "United Kingdom",
       code: "GBP",
-      children: [
+      regions: [
         { name: "Standard", taxRate: 20 },
         { name: "Reduced Rate", taxRate: 5 },
         { name: "Zero Rate", taxRate: 0 }
@@ -103,21 +103,21 @@ export interface TaxRegion {
     {
       name: "Australia",
       code: "AUD",
-      children: [
+      regions: [
         { name: "Goods and Services Tax", taxRate: 10 }
       ]
     },
     {
       name: "Japan",
       code: "JPY",
-      children: [
+      regions: [
         { name: "Consumption Tax", taxRate: 10 }
       ]
     },
     {
       name: "Germany",
       code: "EUR",
-      children: [
+      regions: [
         { name: "Standard", taxRate: 19 },
         { name: "Reduced", taxRate: 7 }
       ]
