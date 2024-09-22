@@ -1,21 +1,37 @@
 'use client'
 
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function PWAHandler() {
+  const router = useRouter();
+
   useEffect(() => {
     const isPWA = window.matchMedia('(display-mode: standalone)').matches;
     
     if (isPWA) {
-      window.addEventListener("visibilitychange", function () {
-        console.log("Visibility changed");
+      const handleVisibilityChange = () => {
         if (document.visibilityState === "visible") {
           console.log("APP resumed");
-          window.location.reload();
+          const setupSkipped = localStorage.getItem("setupSkipped");
+          const currency = localStorage.getItem("currency");
+          const state = localStorage.getItem("state");
+
+          if (setupSkipped === "true" || (currency && state)) {
+            router.push('/cart');
+          } else {
+            router.push('/onboarding');
+          }
         }
-      });
+      };
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      return () => {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      };
     }
-  }, []);
+  }, [router]);
 
   return null;
 }
