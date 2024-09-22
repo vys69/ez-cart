@@ -16,11 +16,11 @@ export const FloatingNav = ({
   className,
   handleSmoothScroll,
 }: {
-  navItems: {
+  navItems: Array<{
     name: string;
     link: string;
     icon?: JSX.Element;
-  }[];
+  }>;
   className?: string;
   handleSmoothScroll: (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => void;
 }) => {
@@ -92,7 +92,7 @@ export const FloatingNav = ({
           className
         )}
       >
-        {navItems.map((navItem: any, idx: number) => (
+        {navItems.map((navItem, idx) => (
           <Button
             key={`button-${idx}`}
             variant="ghost"
