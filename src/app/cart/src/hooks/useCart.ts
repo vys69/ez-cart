@@ -82,40 +82,57 @@ export function useCart() {
 
     useEffect(() => {
         const loadFromLocalStorage = () => {
-            const storedItems = localStorage.getItem('cartItems');
-            if (storedItems) {
-                dispatch({ type: 'SET_ITEMS', payload: JSON.parse(storedItems) });
+          const storedItems = localStorage.getItem('cartItems');
+          console.log('[useCart] Stored cart items:', storedItems);
+          if (storedItems) {
+            try {
+              const parsedItems = JSON.parse(storedItems);
+              console.log('[useCart] Parsed cart items:', parsedItems);
+              if (parsedItems.length > 0) {
+                dispatch({ type: 'SET_ITEMS', payload: parsedItems });
+              }
+            } catch (error) {
+              console.error('[useCart] Error parsing stored cart items:', error);
             }
-            const storedCountry = localStorage.getItem('selectedCountry');
-            if (storedCountry) {
-                dispatch({ type: 'SET_COUNTRY', payload: JSON.parse(storedCountry) });
-            }
-            const storedRegion = localStorage.getItem('selectedRegion');
-            if (storedRegion) {
-                dispatch({ type: 'SET_REGION', payload: JSON.parse(storedRegion) });
-            }
+          }
+          const storedCountry = localStorage.getItem('selectedCountry');
+          if (storedCountry) {
+            dispatch({ type: 'SET_COUNTRY', payload: JSON.parse(storedCountry) });
+          }
+          const storedRegion = localStorage.getItem('selectedRegion');
+          if (storedRegion) {
+            dispatch({ type: 'SET_REGION', payload: JSON.parse(storedRegion) });
+          }
         };
-
+      
+        console.log('[useCart] Loading data from localStorage');
         loadFromLocalStorage();
-        const data = searchParams.get('data');
-        if (data) {
+      
+        // Only load data from URL if there are no items in localStorage
+        if (!localStorage.getItem('cartItems')) {
+          const data = searchParams.get('data');
+          if (data) {
             const decodedData = decodeData(data);
             dispatch({ type: 'SET_ITEMS', payload: decodedData.items });
             if (decodedData.countryCode) {
-                const country = countries.find(c => c.code === decodedData.countryCode);
-                if (country) dispatch({ type: 'SET_COUNTRY', payload: country });
+              const country = countries.find(c => c.code === decodedData.countryCode);
+              if (country) dispatch({ type: 'SET_COUNTRY', payload: country });
             }
             if (decodedData.region) {
-                const country = countries.find(c => c.code === decodedData.countryCode);
-                const region = country?.regions?.find((r: TaxRegion) => r.name === decodedData.region);
-                if (region) dispatch({ type: 'SET_REGION', payload: region });
+              const country = countries.find(c => c.code === decodedData.countryCode);
+              const region = country?.regions.find(r => r.name === decodedData.region);
+              if (region) dispatch({ type: 'SET_REGION', payload: region });
             }
+          }
         }
-    }, [searchParams]);
+      }, [searchParams]);
 
-    useEffect(() => {
-        localStorage.setItem('cartItems', JSON.stringify(state.items));
-    }, [state.items]);
+      useEffect(() => {
+        if (state.items.length > 0) {
+          console.log('[useCart] Updating localStorage with cart items:', state.items);
+          localStorage.setItem('cartItems', JSON.stringify(state.items));
+        }
+      }, [state.items]);
 
     useEffect(() => {
         if (state.selectedCountry) {
@@ -137,6 +154,8 @@ export function useCart() {
             quantity: 1,
         };
         dispatch({ type: 'ADD_ITEM', payload: newItem });
+        console.log('Item added:', newItem);
+        console.log('Updated cart items:', [...state.items, newItem]);
     };
 
     const removeItem = (id: number) => {
@@ -145,6 +164,14 @@ export function useCart() {
 
     const updateItemQuantity = (id: number, quantity: number) => {
         dispatch({ type: 'UPDATE_ITEM_QUANTITY', payload: { id, quantity } });
+    };
+
+    const setBackConfirmed = (confirmed: boolean) => {
+        localStorage.setItem('backConfirmed', confirmed.toString());
+    };
+
+    const getBackConfirmed = (): boolean => {
+        return localStorage.getItem('backConfirmed') === 'true';
     };
 
     const handleShare = async () => {
@@ -232,5 +259,7 @@ export function useCart() {
         setNewItemPrice,
         setSelectedCountry,
         setSelectedRegion,
+        setBackConfirmed,
+        getBackConfirmed,
     };
 }
