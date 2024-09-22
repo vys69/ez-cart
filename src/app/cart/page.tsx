@@ -15,6 +15,7 @@ import { ToastAction } from "@/components/ui/toast"
 import LottieTrash from "@/components/LottieTrash"
 import LottieArrow from "@/components/LottieArrow"
 import SwipeableCard from "@/components/ui/SwipeableCard"
+
 interface GroceryItem {
   id: number
   name: string
@@ -49,11 +50,35 @@ function CartContent() {
   const itemPriceInputRef = useRef<HTMLInputElement>(null)
 
   const encodeData = (data: SharedData): string => {
-    return btoa(JSON.stringify(data));
+    const itemsString = data.items.map(item => `${item.name}:${item.price}:${item.quantity}`).join(';');
+    const countryString = data.countryCode ? `C:${data.countryCode}` : '';
+    const regionString = data.region ? `R:${data.region}` : '';
+    return [itemsString, countryString, regionString].filter(Boolean).join(';');
   };
 
   const decodeData = (encodedData: string): SharedData => {
-    return JSON.parse(atob(encodedData));
+    const parts = encodedData.split(';');
+    const items: GroceryItem[] = [];
+    let countryCode: string | null = null;
+    let region: string | null = null;
+
+    parts.forEach(part => {
+      if (part.startsWith('C:')) {
+        countryCode = part.slice(2);
+      } else if (part.startsWith('R:')) {
+        region = part.slice(2);
+      } else {
+        const [name, price, quantity] = part.split(':');
+        items.push({
+          id: Date.now() + Math.random(),
+          name,
+          price: parseFloat(price),
+          quantity: parseInt(quantity, 10)
+        });
+      }
+    });
+
+    return { items, countryCode, region };
   };
 
   const handleShare = async () => {
@@ -63,7 +88,7 @@ function CartContent() {
       region: selectedRegion?.name || null
     };
     const encodedData = encodeData(sharedData);
-    const shareableUrl = `${window.location.origin}${window.location.pathname}?data=${encodedData}`;
+    const shareableUrl = `${window.location.origin}${window.location.pathname}?data=${encodeURIComponent(encodedData)}`;
 
     if (navigator.share) {
       try {

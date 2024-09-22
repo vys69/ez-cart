@@ -17,6 +17,8 @@ export default function Home() {
   }
 
   const words = ["easy", "simple", "effortless"];
+  const logoWords = ["Easy Cart", "EZ-Cart", "EZ Cart"];
+  const preciseSynoynms = ["Precise", "Accurate", "Exact"];
 
   return (
     <>
@@ -35,14 +37,14 @@ export default function Home() {
               className="inline-block"
               draggable={false}
             />
-            <span>EZ Cart</span>
+            <FlipWords words={logoWords} duration={2000} className='text-white' />
           </div>
         </header>
 
         <main className="relative z-10 transition-all duration-300">
           <section className="container mx-auto px-4 pt-20 pb-0 text-center">
             <h1 className="text-6xl font-bold mb-4">
-              Your shopping,<br />made<FlipWords words={words} duration={2000} className='text-white' /> <br />
+              Your shopping,<br />made <FlipWords words={words} duration={2000} className='text-white' /> <br />
             </h1>
             <p className="text-xl text-gray-400 mb-8">Smart shopping cart calculator for savvy shoppers</p>
             {/* <Button
@@ -103,7 +105,7 @@ export default function Home() {
 
           <section className="container mx-auto px-4 pt-12 pb-0 text-center">
             <h2 className="text-4xl font-bold mb-4">
-              Precise totals with<br />your state&apos;s local sales tax
+            <FlipWords words={preciseSynoynms} duration={2000} className='text-white'/>totals with<br />your state&apos;s local sales tax
             </h2>
             <p className="text-xl text-gray-400 mb-10">
               EZ Cart automatically applies the correct sales tax<br />for your state, ensuring accurate totals every time<br />(Currently available for USA only)
