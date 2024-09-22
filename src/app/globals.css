@@ -85,3 +85,7 @@
 body{
   font-family: var(--font-geist-sans) !important;
 }
+
+.floating-nav{
+  border: 1px solid #ffffff17;
+}

@@ -7,7 +7,9 @@ import Image from 'next/image'
 // import { LinearBlur } from "progressive-blur"
 import { Spotlight } from "@/components/ui/Spotlight";
 import { FlipWords } from "@/components/ui/flip-words";
+import { FloatingNav } from "@/components/ui/floating-navbar";
 import ShinyGrid from "@/components/ui/ShinyGrid";
+import { LucideHome, Info, ArrowDownToLine } from "lucide-react";
 
 export default function Home() {
   const router = useRouter()
@@ -20,27 +22,63 @@ export default function Home() {
     }
   }
 
+  const navItems = [
+    {
+      name: "Home",
+      link: "#home",
+      icon: <LucideHome className="h-4 w-4 text-neutral-500 dark:text-white" />,
+    },
+    {
+      name: "About",
+      link: "#about",
+      icon: <Info className="h-4 w-4 text-neutral-500 dark:text-white" />,
+    },
+    {
+      name: "Install App",
+      link: "#install",
+      icon: (
+        <ArrowDownToLine className="h-4 w-4 text-neutral-500 dark:text-white" />
+      ),
+    },
+  ];
+
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const words = ["easy", "simple", "effortless"];
   const preciseSynoynms = ["Precise", "Accurate", "Exact"];
 
   return (
     <>
-        <Spotlight
-          className="spotlight animate-spotlight absolute top-0 left-0 w-full h-full z-[999999] w-full"
-          fill="white"
-        />
-      <div className="min-h-screen bg-black text-white overflow-hidden">
+      <Spotlight
+        className="spotlight animate-spotlight absolute top-0 left-0 w-full h-full z-[999999] w-full"
+        fill="white"
+      />
+      <FloatingNav className="bg-black border-1 border-white text-white" navItems={navItems} handleSmoothScroll={handleSmoothScroll} />
+      <div id="home" className="min-h-screen bg-black text-white overflow-hidden">
         <header className="bg-transparent container mx-auto px-4 py-6 flex justify-between items-center relative z-10">
-          <div className="text-2xl font-bold flex items-center bg-transparent">
-            <Image
-              src="/image/pwa/128.png"
-              alt="EZ Cart Logo"
-              width={64}
-              height={64}
-              className="inline-block"
-              draggable={false}
-            />
-             EZ Cart
+          <div className="w-full flex flex-row justify-between items-center">
+            <div className="text-2xl font-bold flex items-center bg-transparent">
+              <Image
+                src="/image/pwa/128.png"
+                alt="EZ Cart Logo"
+                width={64}
+                height={64}
+                className="inline-block"
+                draggable={false}
+              />
+              EZ Cart
+            </div>
+            <div className="flex flex-row">
+              <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShopping}>
+                Go Shopping
+              </Button>
+            </div>
           </div>
         </header>
 
@@ -106,9 +144,9 @@ export default function Home() {
 
           <div className="h-[1px] bg-neutral-900 w-[90%] mx-auto" />
 
-          <section className="container mx-auto px-4 pt-12 pb-0 text-center">
+          <section id="about" className="container mx-auto px-4 pt-12 pb-0 text-center">
             <h2 className="text-4xl font-bold mb-4">
-            <FlipWords words={preciseSynoynms} duration={2000} className='text-white'/>totals with<br />your state&apos;s local sales tax
+              <FlipWords words={preciseSynoynms} duration={2000} className='text-white' />totals with<br />your state&apos;s local sales tax
             </h2>
             <p className="text-xl text-gray-400">
               EZ Cart automatically applies the correct sales tax<br />for your state, ensuring accurate totals every time
@@ -157,6 +195,42 @@ export default function Home() {
               />
             </div>
           </section>
+
+          <section id="install" className="container mx-auto px-4 pt-2 pb-12 text-center">
+            <h2 className="text-4xl font-bold mb-4">
+              Use EZ Cart Offline
+            </h2>
+            <p className="text-xl text-gray-400 mb-0">
+              Install our app for a seamless shopping experience, even without internet
+            </p>
+            {/* <div className="flex justify-center space-x-16 mt-14">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold mb-4">Desktop</h3>
+                <ol className="text-left list-decimal list-inside">
+                  <li>Click the install icon in the address bar</li>
+                  <li>Select 'Install' in the prompt</li>
+                </ol>
+              </div>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold mb-4">Mobile</h3>
+                <ol className="text-left list-decimal list-inside">
+                  <li>Tap the share button</li>
+                  <li>Select 'Add to Home Screen'</li>
+                  <li>Tap 'Add' in the top right corner</li>
+                </ol>
+              </div>
+            </div> */}
+            <div className="bg-black rounded-3xl py-0 px-8 relative overflow-hidden">
+              <Image
+                src="/image/landing/install-guide.png"
+                alt="EZ Cart Screenshot"
+                width={1600}
+                height={1200}
+                className="rounded-2xl shadow-2xl mx-auto"
+                draggable={false}
+              />
+            </div>
+          </section>
         </main>
 
         <div className="h-[1px] bg-neutral-900 w-[90%] mx-auto" />
@@ -168,7 +242,7 @@ export default function Home() {
           </div>
         </footer>
       </div>
-      <ShinyGrid className='opacity-[0.3]'/>
+      <ShinyGrid className='opacity-[0.3]' />
     </>
   )
 }
