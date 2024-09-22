@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import localFont from "next/font/local";
+import PWAHandler from '@/components/PWAHandler';
 
 export const metadata: Metadata = {
   title: 'EZ Cart',
@@ -68,6 +69,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="font-sans">
+        <PWAHandler />
         {children}
         <Toaster />
       </body>
