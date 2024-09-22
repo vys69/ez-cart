@@ -7,9 +7,18 @@ export const metadata: Metadata = {
   title: 'EZ Cart',
   description: 'Your shopping, made easy',
   icons: {
-    icon: '/image/pwa/icon_192.png',
-    shortcut: '/image/pwa/icon_192.png',
+    icon: [
+      { url: '/image/meta/favicon.ico', sizes: 'any' },
+      { url: '/image/meta/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/image/meta/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/image/meta/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/image/meta/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/image/meta/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
+  manifest: '/image/meta/site.webmanifest',
   openGraph: {
     title: "EZ Cart",
     description: "Your shopping, made easy",
