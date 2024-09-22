@@ -43,14 +43,8 @@ To set up EZCart on your local machine:
 
 ## Contributing
 
-We welcome contributions to EZCart! If you'd like to contribute, please follow these steps:
-
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/AmazingFeature`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-5. Push to the branch (`git push origin feature/AmazingFeature`)
-6. Open a Pull Request
+To learn how to contribute:
+- Familiarize yourself with the project with [CONTRIBUTING.md](https://github.com/vys69/ez-cart/blob/master/CONTRIBUTING.md)
 
 Please ensure your code adheres to the project's coding standards and includes appropriate tests.
 
