@@ -17,6 +17,7 @@ interface CartCardProps {
   formatNumber: (num: number) => string;
   removeItem: (id: number) => void;
   updateItemQuantity: (id: number, quantity: number) => void;
+  isItemChanged: boolean;
 }
 
 const CartCard: React.FC<CartCardProps> = ({
@@ -25,9 +26,10 @@ const CartCard: React.FC<CartCardProps> = ({
   formatNumber,
   removeItem,
   updateItemQuantity,
+  isItemChanged,
 }) => {
   return (
-    <SwipeableCard onDelete={() => removeItem(item.id)}>
+    <SwipeableCard onDelete={() => removeItem(item.id)} isItemChanged={isItemChanged}>
       <li
         className={`
           relative overflow-hidden

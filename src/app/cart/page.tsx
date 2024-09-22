@@ -47,57 +47,52 @@ function CartContent() {
   const [previousTotal, setPreviousTotal] = useState(0);
   const [transitionDirection, setTransitionDirection] = useState<"up" | "down">("down");
   const [transitionColor, setTransitionColor] = useState("text-white");
+  const [isItemChanged, setIsItemChanged] = useState(false);
+  const [totalChanged, setTotalChanged] = useState(false);
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const taxRate = selectedRegion?.taxRate || 0;
   const taxAmount = subtotal * (taxRate / 100);
   const total = subtotal + taxAmount;
 
-  const handleItemNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value.length <= 100) {
-      setNewItemName(value);
-    }
-  };
-
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    if (/^\d{0,10}(\.\d*)?$/.test(value)) {
-      setNewItemPrice(value);
-    }
-  };
-
   const handleItemNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && newItemName.trim() !== '') {
-      e.preventDefault()
-      itemPriceInputRef.current?.focus()
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      itemPriceInputRef.current?.focus();
     }
   };
 
   const handlePriceKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && newItemPrice.trim() !== '') {
-      e.preventDefault()
-      handleSubmit(e)
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const form = e.currentTarget.form;
+      if (form) {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newItemName.trim() && newItemPrice.trim()) {
-      const price = parseFloat(newItemPrice);
-      if (!isNaN(price) && isFinite(price)) {
-        addItem(newItemName, price);
-        setNewItemName("");
-        setNewItemPrice("");
-        itemNameInputRef.current?.focus();
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Input Error",
-          description: "Please enter a valid price.",
-        });
-      }
+    const form = e.currentTarget;
+    const nameInput = form.elements.namedItem('itemName') as HTMLInputElement;
+    const priceInput = form.elements.namedItem('itemPrice') as HTMLInputElement;
+
+    const name = nameInput.value.trim();
+    const price = parseFloat(priceInput.value);
+
+    if (name && !isNaN(price) && isFinite(price)) {
+      addItem(name, price);
+      form.reset();
+      nameInput.focus();
+      setIsItemChanged(true);
+      setTimeout(() => setIsItemChanged(false), 300);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Input Error",
+        description: "Please enter a valid item name and price.",
+      });
     }
   };
 
@@ -126,26 +121,47 @@ function CartContent() {
   };
 
   useEffect(() => {
+    const scrollToBottom = () => {
+      if (listRef.current) {
+        listRef.current.scrollTop = listRef.current.scrollHeight;
+      }
+    };
+
+    scrollToBottom();
+
+    return scrollToBottom;
+  }, []);
+
+  useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
     }
 
-    const newTotal = subtotal + taxAmount;
-    if (newTotal > previousTotal) {
-      setTransitionDirection("up");
-      setTransitionColor("text-green-500");
-    } else if (newTotal < previousTotal) {
-      setTransitionDirection("down");
-      setTransitionColor("text-red-500");
+    if (isItemChanged) {
+      const newTotal = subtotal + taxAmount;
+      if (newTotal !== previousTotal) {
+        setTotalChanged(true);
+        if (newTotal > previousTotal) {
+          setTransitionDirection("up");
+          setTransitionColor("text-green-500");
+        } else if (newTotal < previousTotal) {
+          setTransitionDirection("down");
+          setTransitionColor("text-red-500");
+        }
+        setPreviousTotal(newTotal);
+
+        const timer = setTimeout(() => {
+          setTransitionColor("text-white");
+          setTotalChanged(false);
+          setIsItemChanged(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+      } else {
+        setIsItemChanged(false);
+      }
     }
-    setPreviousTotal(newTotal);
-
-    const timer = setTimeout(() => {
-      setTransitionColor("text-white");
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [items, subtotal, taxAmount, previousTotal]);
+  }, [isItemChanged, subtotal, taxAmount, previousTotal]);
 
   return (
     <div className="min-h-screen bg-[#00000050] flex flex-col relative z-10">
@@ -197,8 +213,17 @@ function CartContent() {
                 item={item}
                 selectedCountry={selectedCountry}
                 formatNumber={formatNumber}
-                removeItem={removeItem}
-                updateItemQuantity={updateItemQuantity}
+                removeItem={(id) => {
+                  removeItem(id);
+                  setIsItemChanged(true);
+                  setTimeout(() => setIsItemChanged(false), 300);
+                }}
+                updateItemQuantity={(id, quantity) => {
+                  updateItemQuantity(id, quantity);
+                  setIsItemChanged(true);
+                  setTimeout(() => setIsItemChanged(false), 300);
+                }}
+                isItemChanged={isItemChanged}
               />
             ))}
           </ul>
@@ -232,7 +257,7 @@ function CartContent() {
             )}
             <div className="flex justify-between items-center mt-1">
               <span className="text-lg font-bold text-white">Total:</span>
-              <TextTransition springConfig={presets.gentle} direction={transitionDirection} inline={true} className={`text-lg font-bold ${transitionColor}`}>
+              <TextTransition springConfig={presets.gentle} direction={transitionDirection} inline={true} className={`text-lg font-bold ${totalChanged ? transitionColor : 'text-white'}`}>
                 {formatNumber(total)} {selectedCountry?.code || ''}
               </TextTransition>
             </div>
@@ -240,24 +265,23 @@ function CartContent() {
           <form onSubmit={handleSubmit} className="flex flex-col space-y-2 pb-4 w-full">
             <Input
               type="text"
+              name="itemName"
               placeholder="Item name"
-              value={newItemName}
-              onChange={handleItemNameChange}
-              onKeyDown={handleItemNameKeyDown}
               className="w-full text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
               ref={itemNameInputRef}
               maxLength={100}
+              onKeyDown={handleItemNameKeyDown}
             />
             <div className="flex space-x-2 w-full">
               <Input
                 type="text"
+                name="itemPrice"
                 inputMode="decimal"
                 placeholder="Price"
-                value={newItemPrice}
-                onChange={handlePriceChange}
-                onKeyDown={handlePriceKeyDown}
                 className="flex-grow text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
                 ref={itemPriceInputRef}
+                maxLength={10}
+                onKeyDown={handlePriceKeyDown}
               />
               <Button type="submit" size="icon" className="h-12 w-12 bg-white text-black">
                 <Plus className="h-6 w-6" />
