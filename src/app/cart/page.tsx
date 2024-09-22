@@ -371,9 +371,15 @@ function CartContent() {
             {items.map((item) => (
               <SwipeableCard key={item.id} onDelete={() => removeItem(item.id)}>
                 <li
-                  className={` relative overflow-hidden flex flex-col bg-gradient-custom p-4 rounded-lg shadow fade-in transition-all duration-300 ease-in-out
-      ${items.length > 1 ? 'staggered-animation' : ''}
-    `}
+                  className={`
+    relative overflow-hidden
+    flex flex-col
+    bg-gradient-custom
+    p-4 rounded-lg shadow fade-in
+    transition-all duration-300 ease-in-out
+    cursor-grab active:cursor-grabbing
+    ${items.length > 1 ? 'staggered-animation' : ''}
+  `}
                 >
                   <div className="flex items-center justify-between w-full">
                     <div className="flex flex-col">
