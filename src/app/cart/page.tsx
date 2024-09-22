@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 import LottieTrash from "@/components/LottieTrash"
 import LottieArrow from "@/components/LottieArrow"
-
+import SwipeableCard from "@/components/ui/SwipeableCard"
 interface GroceryItem {
   id: number
   name: string
@@ -64,7 +64,7 @@ function CartContent() {
     };
     const encodedData = encodeData(sharedData);
     const shareableUrl = `${window.location.origin}${window.location.pathname}?data=${encodedData}`;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -120,7 +120,7 @@ function CartContent() {
     if (sharedData) {
       try {
         const parsedData: SharedData = decodeData(sharedData);
-        
+
         if (parsedData.items && Array.isArray(parsedData.items)) {
           setItems(parsedData.items);
           saveItemsToLocalStorage(parsedData.items);
@@ -285,7 +285,7 @@ function CartContent() {
 
   const updateItemQuantity = (id: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-    const updatedItems = items.map(item => 
+    const updatedItems = items.map(item =>
       item.id === id ? { ...item, quantity: newQuantity } : item
     );
     setItems(updatedItems);
@@ -325,7 +325,7 @@ function CartContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#000000] flex flex-col">
+    <div className="min-h-screen bg-[#00000050] flex flex-col">
       <Card className="bg-[#000000] flex-grow flex flex-col rounded-none overflow-auto border-none">
         <CardHeader className="py-4 flex flex-row items-center justify-between">
           <Button
@@ -368,63 +368,56 @@ function CartContent() {
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden flex flex-col relative px-4">
           <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-10">
-            {items.map(item => (
-              <li
-                key={item.id}
-                className={`
-                  relative overflow-hidden
-                  flex flex-col
-                  bg-gradient-custom
-                  p-4 rounded-lg shadow fade-in
-                  transition-all duration-300 ease-in-out
-                  hover:bg-[#383838]
-                  ${items.length > 1 ? 'staggered-animation' : ''}
-                `}
-              >
-
-
-                <div className="flex justify-between items-center mb-2 relative">
-                  <span className="text-xl break-words text-white">{item.name}</span>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="link"
-                      size="icon"
-                      onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                      className="h-8 w-8 rounded-full text-white hover:text-red-300"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <span className="text-white w-8 text-center">{item.quantity}</span>
-                    <Button
-                      variant="link"
-                      size="icon"
-                      onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                      className="h-8 w-8 rounded-full text-white hover:text-green-300"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="default" 
-                      size="icon" 
-                      onClick={() => removeItem(item.id)} 
-                      className="h-8 w-8 flex-shrink-0 bg-[#191919] z-0 hover:text-red-300"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+            {items.map((item) => (
+              <SwipeableCard key={item.id} onDelete={() => removeItem(item.id)}>
+                <li
+                  className={` relative overflow-hidden flex flex-col bg-gradient-custom p-4 rounded-lg shadow fade-in transition-all duration-300 ease-in-out
+      ${items.length > 1 ? 'staggered-animation' : ''}
+    `}
+                >
+                  <div className="flex justify-between items-center mb-2 relative">
+                    <span className="text-xl break-words text-white">{item.name}</span>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="link"
+                        size="icon"
+                        onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-primary-foreground shadow hover:bg-primary/90 h-8 w-8 flex-shrink-0 bg-[#191919] z-0 hover:text-red-300"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <span className="text-white w-8 text-center">{item.quantity}</span>
+                      <Button
+                        variant="link"
+                        size="icon"
+                        onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 text-primary-foreground shadow hover:bg-primary/90 h-8 w-8 flex-shrink-0 bg-[#191919] z-0 hover:text-red-300"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="default"
+                        size="icon"
+                        onClick={() => removeItem(item.id)}
+                        className="h-8 w-8 rounded-full bg-transparent text-white hover:text-red-300"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <div className="relative">
-                  <span className="text-md font-regular text-white">
-                    {formatNumber(item.price)} {selectedCountry?.code || ''}
-                  </span>
-                </div>
-              </li>
+                  <div className="relative">
+                    <span className="text-md font-regular text-white">
+                      {formatNumber(item.price)} {selectedCountry?.code || ''}
+                    </span>
+                  </div>
+                </li>
+              </SwipeableCard>
             ))}
           </ul>
         </CardContent>
       </Card>
       <div className="sticky bottom-0 w-full bg-[#000000] pt-2 relative">
-        <LinearBlur
+        {/* <LinearBlur
           side="bottom"
           steps={16}
           strength={32}
@@ -436,8 +429,8 @@ function CartContent() {
             height: "100px",
             pointerEvents: "none",
           }}
-        />
-        <div className="px-4">
+        /> */}
+        <div className="px-4 bg-black">
           <div className="flex flex-col py-2 mb-2 w-full">
             <div className="flex justify-between items-center">
               <span className="text-sm text-white">Subtotal:</span>
@@ -482,7 +475,7 @@ function CartContent() {
                 className="flex-grow text-lg h-12 text-white font-normal border-2 border-[#383838] rounded-md placeholder-gray-400"
                 ref={itemPriceInputRef}
               />
-              <Button type="submit" size="icon" className="h-12 w-12 text-white">
+              <Button type="submit" size="icon" className="h-12 w-12 bg-white text-black">
                 <Plus className="h-6 w-6" />
               </Button>
             </div>
