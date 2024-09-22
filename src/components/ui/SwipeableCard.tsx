@@ -4,9 +4,10 @@ import { Trash2 } from "lucide-react";
 interface SwipeableCardProps {
   children: React.ReactNode;
   onDelete: () => void;
+  isItemChanged: boolean;
 }
 
-const SwipeableCard: React.FC<SwipeableCardProps> = ({ children, onDelete }) => {
+const SwipeableCard: React.FC<SwipeableCardProps> = ({ children, onDelete, isItemChanged }) => {
   const [offset, setOffset] = useState(0);
   const [startX, setStartX] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -50,8 +51,8 @@ const SwipeableCard: React.FC<SwipeableCardProps> = ({ children, onDelete }) => 
   }, []);
 
   return (
-    <div 
-      className="relative overflow-hidden cursor-grab active:cursor-grabbing" 
+    <div
+      className="relative overflow-hidden cursor-grab active:cursor-grabbing"
       ref={cardRef}
       onTouchStart={(e) => handleStart(e.touches[0].clientX)}
       onTouchMove={(e) => handleMove(e.touches[0].clientX)}
@@ -65,7 +66,9 @@ const SwipeableCard: React.FC<SwipeableCardProps> = ({ children, onDelete }) => 
         className={`transition-transform duration-300 ease-out ${isDeleting ? 'transform -translate-x-full' : ''}`}
         style={{ transform: `translateX(${offset}px)` }}
       >
-        {children}
+        <div className={`transition-opacity duration-300 ${isItemChanged ? 'opacity-50' : 'opacity-100'}`}>
+          {children}
+        </div>
       </div>
       <div
         className="absolute top-0 right-0 bottom-0 flex items-center justify-center bg-red-500 transition-transform duration-300 ease-out cursor-pointer"
