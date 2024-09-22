@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'Your shopping, made easy',
     start_url: '/',
     display: 'standalone',
-    background_color: '#ffffff',
+    background_color: '#000000',
     theme_color: '#000000',
     icons: [
       { src: '/image/pwa/16.png', sizes: '16x16', type: 'image/png' },
