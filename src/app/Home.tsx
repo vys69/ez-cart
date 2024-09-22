@@ -45,7 +45,7 @@ export default function Home() {
               Your shopping,<br />made<FlipWords words={words} duration={2000} className='text-white' /> <br />
             </h1>
             <p className="text-xl text-gray-400 mb-8">Smart shopping cart calculator for savvy shoppers</p>
-            <Button
+            {/* <Button
               size="lg"
               className="h-12 animate-shimmer items-center justify-center
               rounded-full border border-neutral-800 bg-[linear-gradient(110deg,#000000,45%,#272727,55%,#000000)] 
@@ -54,11 +54,14 @@ export default function Home() {
               onClick={handleGoShopping}
             >
               Start shopping smarter
+            </Button> */}
+            <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShopping}>
+              Start shopping smarter
             </Button>
             <p className="text-sm text-gray-400 mt-4">No registration required</p>
           </section>
 
-          <section className="container mx-auto px-4 py-0">
+          <section className="container mx-auto px-4 py-10">
             <div className="bg-black rounded-3xl px-8 relative overflow-hidden">
               {/* <LinearBlur
                 side="bottom"
@@ -98,11 +101,11 @@ export default function Home() {
 
           <div className="h-[1px] bg-neutral-900 w-[90%] mx-auto" />
 
-          <section className="container mx-auto px-4 pt-10 pb-0 text-center">
+          <section className="container mx-auto px-4 pt-12 pb-0 text-center">
             <h2 className="text-4xl font-bold mb-4">
               Precise totals with<br />your state&apos;s local sales tax
             </h2>
-            <p className="text-xl text-gray-400 mb-8">
+            <p className="text-xl text-gray-400 mb-10">
               EZ Cart automatically applies the correct sales tax<br />for your state, ensuring accurate totals every time<br />(Currently available for USA only)
             </p>
             <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-200" onClick={handleGoShopping}>
@@ -111,7 +114,7 @@ export default function Home() {
             <p className="text-sm text-gray-400 mt-4">Supports all 50 states</p>
           </section>
 
-          <section className="container mx-auto px-4 pt-5 pb-0">
+          <section className="container mx-auto px-4 pt-10 pb-10">
             <div className="bg-black rounded-3xl p-8 relative overflow-hidden">
               {/* <LinearBlur
                 side="bottom"
