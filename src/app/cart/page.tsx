@@ -543,7 +543,7 @@ function CartContent() {
           onConfirm: handleConfirmClear
         }}
       />
-    <ShinyGrid className='opacity-[0.1] fixed inset-0 z-[0]'/>
+    <ShinyGrid className='shinygrid opacity-[1] fixed inset-0 z-[1]'/>
     </div>
   )
 }
