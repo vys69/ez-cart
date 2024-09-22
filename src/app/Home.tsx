@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <>
         <Spotlight
-          className="spotlight animate-spotlight absolute top-0 left-[470px] w-full h-full z-[999999] w-full"
+          className="spotlight animate-spotlight absolute top-0 left-0 w-full h-full z-[999999] w-full"
           fill="white"
         />
       <div className="min-h-screen bg-black text-white overflow-hidden">
