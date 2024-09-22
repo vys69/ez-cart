@@ -6,9 +6,9 @@ import localFont from "next/font/local";
 export const metadata: Metadata = {
   title: 'EZ Cart',
   description: 'Your shopping, made easy',
-  manifest: '/manifest.json',
   icons: {
     icon: '/image/pwa/icon_192.png',
+    shortcut: '/image/pwa/icon_192.png',
   },
   openGraph: {
     title: "EZ Cart",

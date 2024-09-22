@@ -372,19 +372,19 @@ function CartContent() {
               <SwipeableCard key={item.id} onDelete={() => removeItem(item.id)}>
                 <li
                   className={`
-    relative overflow-hidden
-    flex flex-col
-    bg-gradient-custom
-    p-4 rounded-lg shadow fade-in
-    transition-all duration-300 ease-in-out
-    cursor-grab active:cursor-grabbing
-    ${items.length > 1 ? 'staggered-animation' : ''}
-  `}
+          relative overflow-hidden
+          flex flex-col
+          bg-gradient-custom
+          p-4 rounded-lg shadow fade-in
+          transition-all duration-300 ease-in-out
+          cursor-grab active:cursor-grabbing
+          ${items.length > 1 ? 'staggered-animation' : ''}
+        `}
                 >
                   <div className="flex items-center justify-between w-full">
                     <div className="flex flex-col">
-                      <span className="text-xl break-words text-white">{item.name}</span>
-                      <span className="text-md font-regular text-white">
+                      <span className="text-xl break-words text-white select-none">{item.name}</span>
+                      <span className="text-md font-regular text-white select-none">
                         {formatNumber(item.price)} {selectedCountry?.code || ''}
                       </span>
                     </div>
