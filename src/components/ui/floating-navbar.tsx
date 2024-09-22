@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { handleGoShopping } from '@/helpers/navigationHelpers';
 
 export const FloatingNav = ({
   navItems,
@@ -39,13 +40,7 @@ export const FloatingNav = ({
 
   const router = useRouter();
 
-  const handleGoShopping = () => {
-    if (localStorage.getItem("setupSkipped")) {
-      router.push('/cart')
-    } else {
-      router.push('/step/1')
-    }
-  }
+  const handleGoShoppingClick = () => handleGoShopping();
 
   useMotionValueEvent(scrollYProgress, "change", (current) => {
     if (typeof current === "number") {
@@ -109,7 +104,7 @@ export const FloatingNav = ({
             </Link>
           </Button>
         ))}
-        <Button onClick={handleGoShopping} className="transition-all duration-300 bg-white text-black border text-sm font-medium relative border-white px-4 py-2 rounded-full hover:bg-neutral-300 hover:text-black">
+        <Button onClick={handleGoShoppingClick} className="transition-all duration-300 bg-white text-black border text-sm font-medium relative border-white px-4 py-2 rounded-full hover:bg-neutral-300 hover:text-black">
           <span>Go Shopping</span>
           <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-blue-500 to-transparent  h-px" />
         </Button>
