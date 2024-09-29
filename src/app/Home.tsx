@@ -9,6 +9,7 @@ import { Spotlight } from "@/components/ui/Spotlight";
 import { FlipWords } from "@/components/ui/flip-words";
 import { FloatingNav } from "@/components/ui/floating-navbar";
 import ShinyGrid from "@/components/ui/ShinyGrid";
+import TwinklingGrid from "@/components/ui/TwinklingGrid";
 import { LucideHome, Info, ArrowDownToLine } from "lucide-react";
 
 export default function Home() {
@@ -54,13 +55,13 @@ export default function Home() {
   const preciseSynoynms = ["Precise", "Accurate", "Exact"];
 
   return (
-    <>
+    <div className="relative min-h-screen overflow-hidden">
       <Spotlight
-        className="spotlight animate-spotlight absolute top-0 left-0 w-full h-full z-[999999] w-full"
+        className="spotlight animate-spotlight absolute top-0 left-0 w-full h-full z-[999999]"
         fill="white"
       />
       <FloatingNav className="bg-black border-1 border-white text-white" navItems={navItems} handleSmoothScroll={handleSmoothScroll} />
-      <div id="home" className="min-h-screen bg-black text-white overflow-hidden">
+      <div id="home" className="relative z-10 min-h-screen bg-transparent text-white overflow-hidden">
         <header className="bg-transparent container mx-auto px-4 py-6 flex justify-between items-center relative z-10">
           <div className="w-full flex flex-row justify-between items-center">
             <div className="text-2xl font-bold flex items-center bg-transparent">
@@ -245,7 +246,7 @@ export default function Home() {
           </div>
         </footer>
       </div>
-      <ShinyGrid className='opacity-[0.3]' />
-    </>
+      <TwinklingGrid className='fixed inset-0 z-0' />
+    </div>
   )
 }
