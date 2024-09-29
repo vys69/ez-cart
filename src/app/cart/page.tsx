@@ -18,6 +18,7 @@ import CartCard from "@/components/cart/CartCard";
 import { useCart } from '@/app/cart/src/hooks/useCart';
 import { formatNumber } from '@/app/cart/src/hooks/cartUtils';
 import { Plus, Share2 } from "lucide-react"
+import TwinklingGrid from "@/components/ui/TwinklingGrid"
 
 function CartContent() {
   const router = useRouter()
@@ -164,8 +165,8 @@ function CartContent() {
   }, [isItemChanged, subtotal, taxAmount, previousTotal]);
 
   return (
-    <div className="min-h-screen bg-[#00000050] flex flex-col relative z-10">
-      <Card className="bg-[#000000] flex-grow flex flex-col rounded-none overflow-auto border-none relative z-10">
+    <div className="min-h-screen bg-transparent flex flex-col relative z-10">
+      <Card className="bg-transparent flex-grow flex flex-col rounded-none overflow-auto border-none relative z-10">
         <CardHeader className="py-4 flex flex-row items-center justify-between">
           <Button
             variant="ghost"
@@ -206,7 +207,7 @@ function CartContent() {
           </div>
         </CardHeader>
         <CardContent className="flex-grow overflow-hidden flex flex-col relative px-4">
-          <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-10 cursor-grab">
+          <ul ref={listRef} className="flex-grow overflow-y-auto space-y-4 pb-10">
             {items.map((item) => (
               <CartCard
                 key={item.id}
@@ -314,7 +315,8 @@ function CartContent() {
           onConfirm: handleConfirmClear
         }}
       />
-      <ShinyGrid className='shinygrid opacity-[1] fixed inset-0 z-[1]' />
+      {/* <ShinyGrid className='shinygrid opacity-[1] fixed inset-0 z-[1]' /> */}
+      <TwinklingGrid className='twinklinggrid opacity-[1] brightness-[0.4] fixed inset-0 z-[1]' />
     </div >
   )
 }
