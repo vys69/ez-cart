@@ -19,14 +19,24 @@ import { useCart } from '@/app/cart/src/hooks/useCart';
 import { formatNumber } from '@/app/cart/src/hooks/cartUtils';
 import { Plus, Share2 } from "lucide-react"
 import TwinklingGrid from "@/components/ui/TwinklingGrid"
+import { TaxRegion } from "@/helpers/taxes";  // Add this import
+import { GroceryItem } from '@/app/cart/src/hooks/useCart';  // Add this import
+
+interface CartCardProps {
+  item: GroceryItem;
+  taxRegion: TaxRegion | null;
+  formatNumber: (num: number | null | undefined) => string;
+  removeItem: (id: number) => void;
+  updateItemQuantity: (id: number, quantity: number) => void;
+  isItemChanged: boolean;
+}
 
 function CartContent() {
   const router = useRouter()
   const { toast } = useToast()
   const {
     items,
-    selectedCountry,
-    selectedRegion,
+    selectedState,
     newItemName,
     newItemPrice,
     addItem,
@@ -36,8 +46,10 @@ function CartContent() {
     clearCart,
     setNewItemName,
     setNewItemPrice,
-    setSelectedCountry,
-    setSelectedRegion,
+    setSelectedState,
+    taxRate,
+    subtotal,
+    taxAmount,
   } = useCart();
 
   const [backModalOpen, setBackModalOpen] = useState(false)
@@ -51,9 +63,6 @@ function CartContent() {
   const [isItemChanged, setIsItemChanged] = useState(false);
   const [totalChanged, setTotalChanged] = useState(false);
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const taxRate = selectedRegion?.taxRate || 0;
-  const taxAmount = subtotal * (taxRate / 100);
   const total = subtotal + taxAmount;
 
   const handleItemNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -101,7 +110,7 @@ function CartContent() {
     if (items.length > 0) {
       setBackModalOpen(true);
     } else {
-      router.push('/onboarding');
+      router.push('/');
     }
   };
 
@@ -113,7 +122,7 @@ function CartContent() {
 
   const handleConfirmBack = () => {
     setBackModalOpen(false);
-    router.push('/onboarding');
+    router.push('/');
   };
 
   const handleConfirmClear = () => {
@@ -212,7 +221,7 @@ function CartContent() {
               <CartCard
                 key={item.id}
                 item={item}
-                selectedCountry={selectedCountry}
+                taxRegion={selectedState}
                 formatNumber={formatNumber}
                 removeItem={(id) => {
                   removeItem(id);
@@ -248,18 +257,12 @@ function CartContent() {
           <div className="flex flex-col py-2 mb-2 w-full">
             <div className="flex justify-between items-center">
               <span className="text-sm text-white">Subtotal:</span>
-              <span className="text-white">{formatNumber(subtotal)} {selectedCountry?.code || ''}</span>
+              <span className="text-white">{formatNumber(subtotal)} USD</span>
             </div>
-            {selectedRegion && (
-              <div className="flex justify-between items-center mt-1">
-                <span className="text-sm text-white">Tax ({taxRate}%):</span>
-                <span className="text-white">{formatNumber(taxAmount)} {selectedCountry?.code}</span>
-              </div>
-            )}
             <div className="flex justify-between items-center mt-1">
               <span className="text-lg font-bold text-white">Total:</span>
               <TextTransition springConfig={presets.gentle} direction={transitionDirection} inline={true} className={`text-lg font-bold ${totalChanged ? transitionColor : 'text-white'}`}>
-                {formatNumber(total)} {selectedCountry?.code || ''}
+                {formatNumber(total)} USD
               </TextTransition>
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col space-y-2 pb-4 w-full">

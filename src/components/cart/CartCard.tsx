@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Minus } from "lucide-react";
 import SwipeableCard from "@/components/ui/SwipeableCard";
+import { TaxRegion } from "@/helpers/taxes";
 
 interface GroceryItem {
   id: number;
@@ -13,7 +14,7 @@ interface GroceryItem {
 
 interface CartCardProps {
   item: GroceryItem;
-  selectedCountry: { code: string } | null;
+  taxRegion: TaxRegion | null;
   formatNumber: (num: number) => string;
   removeItem: (id: number) => void;
   updateItemQuantity: (id: number, quantity: number) => void;
@@ -22,7 +23,7 @@ interface CartCardProps {
 
 const CartCard: React.FC<CartCardProps> = ({
   item,
-  selectedCountry,
+  taxRegion,
   formatNumber,
   removeItem,
   updateItemQuantity,
@@ -45,7 +46,7 @@ const CartCard: React.FC<CartCardProps> = ({
           <div className="flex flex-col">
             <span className="text-xl break-words text-white select-none">{item.name}</span>
             <span className="text-md font-regular text-white select-none">
-              {formatNumber(item.price)} {selectedCountry?.code || ''}
+              {formatNumber(item.price)} USD
             </span>
           </div>
           <div className="flex items-center space-x-2">

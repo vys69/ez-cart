@@ -9,4 +9,11 @@ const nextConfig = {
     },
 }
 
-module.exports = nextConfig
+module.exports = {
+    nextConfig,
+    compiler: {
+      removeConsole: {
+        exclude: ['error'],
+      },
+    },
+  }
