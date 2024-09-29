@@ -74,9 +74,9 @@ export default function Component({ className = '' }: { className?: string }) {
                     {grid.flat().map((cell, index) => (
                         <div
                             key={index}
-                            className="aspect-square transition-all duration-200 ease-in-out bg-[#202020]"
+                            className="aspect-square transition-all duration-200 ease-in-out bg-[#151515]"
                             style={{
-                                opacity: 0.1 + cell.brightness * 0.5
+                                opacity: 0.1 + cell.brightness * 0.3
                             }}
                             onMouseEnter={() => activateCell(Math.floor(index / GRID_SIZE), index % GRID_SIZE)}
                         />

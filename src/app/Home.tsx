@@ -146,7 +146,7 @@ export default function Home() {
                 alt="EZ Cart Screenshot"
                 width={1600}
                 height={1200}
-                className="rounded-2xl shadow-2xl mx-auto"
+                className="rounded-2xl shadow-2xl mx-auto filter-drop-shadow drop-shadow-2xl"
                 draggable={false}
               />
             </div>
