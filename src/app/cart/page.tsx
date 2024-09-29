@@ -9,22 +9,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ConfirmationModal } from "@/components/ConfirmationModal"
 import { LinearBlur } from "progressive-blur"
 import { useToast } from "@/hooks/use-toast"
-import { ToastAction } from "@/components/ui/toast"
 import LottieTrash from "@/components/LottieTrash"
 import LottieArrow from "@/components/LottieArrow"
-import ShinyGrid from "@/components/ui/ShinyGrid"
 import TextTransition, { presets } from "react-text-transition";
 import CartCard from "@/components/cart/CartCard";
 import { useCart } from '@/app/cart/src/hooks/useCart';
 import { formatNumber } from '@/app/cart/src/hooks/cartUtils';
 import { Plus, Share2 } from "lucide-react"
 import TwinklingGrid from "@/components/ui/TwinklingGrid"
-import { TaxRegion } from "@/helpers/taxes";  // Add this import
-import { GroceryItem } from '@/app/cart/src/hooks/useCart';  // Add this import
+import { GroceryItem } from '@/app/cart/src/hooks/useCart';
 
 interface CartCardProps {
   item: GroceryItem;
-  taxRegion: TaxRegion | null;
   formatNumber: (num: number | null | undefined) => string;
   removeItem: (id: number) => void;
   updateItemQuantity: (id: number, quantity: number) => void;
@@ -36,7 +32,6 @@ function CartContent() {
   const { toast } = useToast()
   const {
     items,
-    selectedState,
     newItemName,
     newItemPrice,
     addItem,
@@ -46,10 +41,7 @@ function CartContent() {
     clearCart,
     setNewItemName,
     setNewItemPrice,
-    setSelectedState,
-    taxRate,
     subtotal,
-    taxAmount,
   } = useCart();
 
   const [backModalOpen, setBackModalOpen] = useState(false)
@@ -62,8 +54,6 @@ function CartContent() {
   const [transitionColor, setTransitionColor] = useState("text-white");
   const [isItemChanged, setIsItemChanged] = useState(false);
   const [totalChanged, setTotalChanged] = useState(false);
-
-  const total = subtotal + taxAmount;
 
   const handleItemNameKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -148,7 +138,7 @@ function CartContent() {
     }
 
     if (isItemChanged) {
-      const newTotal = subtotal + taxAmount;
+      const newTotal = subtotal;
       if (newTotal !== previousTotal) {
         setTotalChanged(true);
         if (newTotal > previousTotal) {
@@ -171,7 +161,7 @@ function CartContent() {
         setIsItemChanged(false);
       }
     }
-  }, [isItemChanged, subtotal, taxAmount, previousTotal]);
+  }, [isItemChanged, subtotal, previousTotal]);
 
   return (
     <div className="min-h-screen bg-transparent flex flex-col relative z-10">
@@ -221,7 +211,6 @@ function CartContent() {
               <CartCard
                 key={item.id}
                 item={item}
-                taxRegion={selectedState}
                 formatNumber={formatNumber}
                 removeItem={(id) => {
                   removeItem(id);
@@ -255,14 +244,10 @@ function CartContent() {
         />
         <div className="px-4 bg-black">
           <div className="flex flex-col py-2 mb-2 w-full">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-white">Subtotal:</span>
-              <span className="text-white">{formatNumber(subtotal)} USD</span>
-            </div>
             <div className="flex justify-between items-center mt-1">
               <span className="text-lg font-bold text-white">Total:</span>
               <TextTransition springConfig={presets.gentle} direction={transitionDirection} inline={true} className={`text-lg font-bold ${totalChanged ? transitionColor : 'text-white'}`}>
-                {formatNumber(total)} USD
+                {formatNumber(subtotal)} USD
               </TextTransition>
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col space-y-2 pb-4 w-full">

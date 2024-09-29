@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Minus } from "lucide-react";
 import SwipeableCard from "@/components/ui/SwipeableCard";
-import { TaxRegion } from "@/helpers/taxes";
 
 interface GroceryItem {
   id: number;
@@ -14,7 +13,6 @@ interface GroceryItem {
 
 interface CartCardProps {
   item: GroceryItem;
-  taxRegion: TaxRegion | null;
   formatNumber: (num: number) => string;
   removeItem: (id: number) => void;
   updateItemQuantity: (id: number, quantity: number) => void;
@@ -23,7 +21,6 @@ interface CartCardProps {
 
 const CartCard: React.FC<CartCardProps> = ({
   item,
-  taxRegion,
   formatNumber,
   removeItem,
   updateItemQuantity,

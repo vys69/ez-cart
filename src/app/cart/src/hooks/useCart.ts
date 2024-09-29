@@ -1,7 +1,6 @@
 import { useEffect, useReducer } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useToast } from "@/hooks/use-toast";
-import { usStates, TaxRegion } from "@/helpers/taxes";
 import { encodeData, decodeData } from './cartUtils';
 import { SharedData as EncodedSharedData } from '../types/cart';
 
@@ -14,12 +13,10 @@ export interface GroceryItem {
 
 interface SharedData {
     items: GroceryItem[];
-    stateName: string | null;
 }
 
 interface CartState {
     items: GroceryItem[];
-    selectedState: TaxRegion | null;
     newItemName: string;
     newItemPrice: string;
 }
@@ -29,14 +26,12 @@ type CartAction =
     | { type: 'ADD_ITEM'; payload: GroceryItem }
     | { type: 'REMOVE_ITEM'; payload: number }
     | { type: 'UPDATE_ITEM_QUANTITY'; payload: { id: number; quantity: number } }
-    | { type: 'SET_STATE'; payload: TaxRegion | null }
     | { type: 'SET_NEW_ITEM_NAME'; payload: string }
     | { type: 'SET_NEW_ITEM_PRICE'; payload: string }
     | { type: 'CLEAR_CART' };
 
 const initialState: CartState = {
     items: [],
-    selectedState: null,
     newItemName: "",
     newItemPrice: "",
 };
@@ -56,8 +51,6 @@ function cartReducer(state: CartState, action: CartAction): CartState {
                     item.id === action.payload.id ? { ...item, quantity: action.payload.quantity } : item
                 )
             };
-        case 'SET_STATE':
-            return { ...state, selectedState: action.payload };
         case 'SET_NEW_ITEM_NAME':
             return { ...state, newItemName: action.payload };
         case 'SET_NEW_ITEM_PRICE':
@@ -90,10 +83,6 @@ export function useCart() {
               console.error('[useCart] Error parsing stored cart items:', error);
             }
           }
-          const storedState = localStorage.getItem('selectedState');
-          if (storedState) {
-            dispatch({ type: 'SET_STATE', payload: JSON.parse(storedState) });
-          }
         };
       
         console.log('[useCart] Loading data from localStorage');
@@ -105,10 +94,6 @@ export function useCart() {
           if (data) {
             const decodedData = decodeData(data) as EncodedSharedData;
             dispatch({ type: 'SET_ITEMS', payload: decodedData.items });
-            if (decodedData.region) {
-              const state = usStates.find(s => s.name === decodedData.region);
-              if (state) dispatch({ type: 'SET_STATE', payload: state });
-            }
           }
         }
       }, [searchParams]);
@@ -119,12 +104,6 @@ export function useCart() {
           localStorage.setItem('cartItems', JSON.stringify(state.items));
         }
     }, [state.items]);
-
-    useEffect(() => {
-        if (state.selectedState) {
-            localStorage.setItem('selectedState', JSON.stringify(state.selectedState));
-        }
-    }, [state.selectedState]);
 
     const addItem = (name: string, price: number) => {
         const newItem: GroceryItem = {
@@ -156,17 +135,10 @@ export function useCart() {
 
     const handleShare = async () => {
         const sharedData: SharedData = {
-            items: state.items,
-            stateName: state.selectedState?.name || null
+            items: state.items
         };
         
-        const encodedData: EncodedSharedData = {
-            items: sharedData.items,
-            countryCode: 'US', // Hardcoded for US
-            region: sharedData.stateName || ''
-        };
-        
-        const encodedString = encodeData(encodedData);
+        const encodedString = encodeData(sharedData);
         // ... rest of the function
     };
 
@@ -199,14 +171,7 @@ export function useCart() {
         dispatch({ type: 'SET_NEW_ITEM_PRICE', payload: price });
     };
 
-    const setSelectedState = (stateName: string) => {
-        const newState = usStates.find(state => state.name === stateName) || null;
-        dispatch({ type: 'SET_STATE', payload: newState });
-    };
-
-    const taxRate = state.selectedState?.taxRate || 0;
     const subtotal = state.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const taxAmount = subtotal * (taxRate / 100);
 
     return {
         ...state,
@@ -217,11 +182,8 @@ export function useCart() {
         clearCart,
         setNewItemName,
         setNewItemPrice,
-        setSelectedState,
         setBackConfirmed,
         getBackConfirmed,
-        taxRate,
         subtotal,
-        taxAmount,
     };
 }

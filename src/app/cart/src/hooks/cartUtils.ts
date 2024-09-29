@@ -7,46 +7,26 @@ export const formatNumber = (num: number | null | undefined): string => {
 
 export const encodeData = (data: SharedData): string => {
   const itemsString = data.items.map(item => `${item.name}:${item.price}:${item.quantity}`).join(';');
-  const countryString = data.countryCode ? `C:${data.countryCode}` : '';
-  const regionString = data.region ? `R:${data.region}` : '';
-  return [itemsString, countryString, regionString].filter(Boolean).join(';');
+  return itemsString;
 };
 
 export const decodeData = (encodedData: string): SharedData => {
   const parts = encodedData.split(';');
-  const items: GroceryItem[] = [];
-  let countryCode: string | null = null;
-  let region: string | null = null;
-
-  parts.forEach(part => {
-    if (part.startsWith('C:')) {
-      countryCode = part.slice(2);
-    } else if (part.startsWith('R:')) {
-      region = part.slice(2);
-    } else {
-      const [name, price, quantity] = part.split(':');
-      items.push({
-        id: Date.now() + Math.random(),
-        name,
-        price: parseFloat(price),
-        quantity: parseInt(quantity, 10)
-      });
-    }
+  const items: GroceryItem[] = parts.map(part => {
+    const [name, price, quantity] = part.split(':');
+    return {
+      id: Date.now() + Math.random(),
+      name,
+      price: parseFloat(price),
+      quantity: parseInt(quantity, 10)
+    };
   });
 
-  return { items, countryCode, region };
+  return { items };
 };
 
 export const calculateSubtotal = (items: GroceryItem[]): number => {
   return items.reduce((total, item) => total + item.price * item.quantity, 0);
-};
-
-export const calculateTax = (subtotal: number, taxRate: number): number => {
-  return subtotal * (taxRate / 100);
-};
-
-export const calculateTotal = (subtotal: number, taxAmount: number): number => {
-  return subtotal + taxAmount;
 };
 
 export const roundToTwoDecimals = (num: number): number => {
