@@ -102,8 +102,8 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="h-[1px] bg-neutral-900 w-[90%] mx-auto" />
-
+          {/* <div className="h-[1px] bg-neutral-900 w-[90%] mx-auto" /> */}
+{/* 
           <section id="about" className="container mx-auto px-4 pt-12 pb-0 text-center">
             <h2 className="text-4xl font-bold mb-4">
               <FlipWords words={preciseSynoynms} duration={2000} className='text-white' />totals with<br />your state&apos;s local sales tax
@@ -116,9 +116,9 @@ export default function Home() {
               Calculate with confidence
             </Button>
             <p className="text-sm text-gray-400 mt-4">Supports all 50 states</p>
-          </section>
+          </section> */}
 
-          <section className="container mx-auto px-4 pt-10 pb-12">
+          {/* <section className="container mx-auto px-4 pt-10 pb-12">
             <div className="bg-black rounded-3xl p-8 relative overflow-hidden">
               <Image
                 src="/image/landing/split.png"
@@ -129,7 +129,7 @@ export default function Home() {
                 draggable={false}
               />
             </div>
-          </section>
+          </section> */}
 
           <div className="h-[1px] bg-neutral-900 w-[90%] mx-auto" />
 
@@ -140,9 +140,9 @@ export default function Home() {
             <p className="text-xl text-gray-400 mb-0">
               Install our app for a seamless shopping experience, even without internet
             </p>
-            <div className="bg-black rounded-3xl py-0 px-8 relative overflow-hidden">
+            <div className="bg-transparent rounded-3xl py-0 px-8 relative overflow-hidden">
               <Image
-                src="/image/landing/install-guide.png"
+                src="/image/landing/install-guide-transparent.png"
                 alt="EZ Cart Screenshot"
                 width={1600}
                 height={1200}

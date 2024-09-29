@@ -7,13 +7,11 @@ const nextConfig = {
         unoptimized: true,
         path: "/",
     },
+    compiler: {
+        removeConsole: {
+          exclude: ['error'],
+        },
+    },
 }
 
-module.exports = {
-    nextConfig,
-    compiler: {
-      removeConsole: {
-        exclude: ['error'],
-      },
-    },
-  }
+module.exports = nextConfig;
